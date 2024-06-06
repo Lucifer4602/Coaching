@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   FormData: {
+    isTrue: "false",
     firstName: "",
     lastName: "",
     email: "",
@@ -9,6 +10,10 @@ const initialState = {
     confirmPassword: "",
     role: "student",
     otp: "",
+    auth: "false",
+    _id: "",
+    authToken: "",
+    profile: {},
   },
 };
 
@@ -18,6 +23,7 @@ export const formSlice = createSlice({
   reducers: {
     update: (state, action) => {
       state.FormData = action.payload;
+      localStorage.setItem("reduxState", JSON.stringify(state));
     },
   },
 });

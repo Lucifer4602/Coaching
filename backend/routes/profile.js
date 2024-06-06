@@ -6,7 +6,7 @@ const {
   updateProfile,
   getAllUserDetails,
   instructorDashboard,
-} = require("../controllers/Profile");
+} = require("../controllers/profile");
 
 router.delete("/deleteProfile", auth, deleteAccount);
 router.put("/updateProfile", auth, updateProfile);

@@ -7,6 +7,7 @@ import { About } from "./utils/About.jsx";
 import { Signup } from "./utils/Signup.jsx";
 import { VerifyOtp } from "./utils/VerifyOtp.jsx";
 import { Profile } from "./utils/Profile.jsx";
+import { Setting } from "./utils/Setting.jsx";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/signUp" element={<Signup />} />
         <Route path="/verifyOtp" element={<VerifyOtp></VerifyOtp>}></Route>
         <Route path="/profile" element={<Profile></Profile>}></Route>
+        <Route path="/settings" element={<Setting></Setting>}></Route>
       </Routes>
     </Router>
   );

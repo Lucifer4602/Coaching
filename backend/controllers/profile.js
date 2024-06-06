@@ -45,7 +45,7 @@ exports.updateProfile = async (req, res) => {
   } catch (error) {
     res.status(506).json({
       success: false,
-      message: "update hi ni ho ri profile",
+      message: error.message,
     });
   }
 };
@@ -96,7 +96,8 @@ exports.deleteAccount = async (req, res) => {
 exports.getAllUserDetails = async (req, res) => {
   try {
     const id = req.user.id;
-    console.log(id);
+    // console.log(req.user);
+    // console.log(id);
     const userDetails = await user.findById(id).populate("additional").exec();
     res.status(200).json({
       success: true,

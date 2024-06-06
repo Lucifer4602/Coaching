@@ -1,23 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { Navbar } from "./Navbar";
-import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { Navbar } from "../utils/Navbar";
+import { Pnav } from "./ProfileComp/Pnav";
 import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Pcomp } from "./ProfileComp/Pcomp.jsx";
-import { Pcomp1 } from "./ProfileComp/Pcomp1.jsx";
-import { Pnav } from "./ProfileComp/Pnav.jsx";
-import { Pcomp2 } from "./ProfileComp/Pcomp2.jsx";
-import { update } from "@/redux/FormSlice";
+import { Scomp } from "./ProfileComp/Scomp";
+import axios from "axios"; // Ensure axios is imported
+import { useDispatch, useSelector } from "react-redux";
+import { update } from "@/redux/FormSlice"; // Ensure update action is imported
+import { Scomp1 } from "./ProfileComp/Scomp1";
 
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-
-export const Profile = () => {
+export const Setting = () => {
   const [loading, setLoading] = useState(true);
   const select = useSelector((state) => state.form.FormData);
   const authToken = select.authToken;
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -34,9 +28,9 @@ export const Profile = () => {
             },
           }
         );
-        console.log("Response data:", response.data);
+        console.log(response.data);
+        localStorage.setItem("profileData", JSON.stringify(response.data));
         dispatch(update({ ...select, profile: response.data }));
-        console.log(select.profile);
       } catch (error) {
         console.error("Error fetching user details:", error);
       } finally {
@@ -44,7 +38,11 @@ export const Profile = () => {
       }
     };
 
-    if (authToken && select._id) {
+    const savedData = localStorage.getItem("profileData");
+    if (savedData) {
+      dispatch(update({ ...select, profile: JSON.parse(savedData) }));
+      setLoading(false);
+    } else if (authToken && select._id) {
       fetchData();
     } else {
       setLoading(false);
@@ -54,22 +52,18 @@ export const Profile = () => {
   return (
     <div>
       <Navbar />
-
       <Separator className=" bg-slate-900" />
       <div className="flex flex-row h-screen">
         <Pnav />
         <div className="w-[80%] bg-slate-900">
-          <ScrollArea className="h-[100%] w-[70%] mx-auto">
-            {loading ? (
-              <div className="flex flex-col gap-5"></div>
-            ) : (
-              <div className="flex flex-col gap-5">
-                <Pcomp></Pcomp>
-                <Pcomp1></Pcomp1>
-                <Pcomp2></Pcomp2>
-              </div>
-            )}
-          </ScrollArea>
+          {loading ? (
+            <div>Loading...</div>
+          ) : (
+            <>
+              <Scomp />
+              <Scomp1></Scomp1>
+            </>
+          )}
         </div>
       </div>
     </div>

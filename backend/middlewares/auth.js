@@ -20,6 +20,7 @@ exports.auth = async (req, res, next) => {
         token,
         "my-32-character-ultra-secure-and-ultra-long-secret"
       );
+
       req.user = payload;
     } catch (error) {
       return res.status(401).json({

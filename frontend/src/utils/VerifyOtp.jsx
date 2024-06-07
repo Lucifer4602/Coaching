@@ -14,7 +14,7 @@ import { update } from "@/redux/FormSlice";
 
 export const VerifyOtp = () => {
   const navigate = useNavigate();
-  const formData = useSelector((state) => state.form.FormData);
+  const formData = useSelector((state) => state?.form?.FormData);
   const [otp, setOtp] = useState("");
   const dispatch = useDispatch();
 

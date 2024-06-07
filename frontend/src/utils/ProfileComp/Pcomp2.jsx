@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { Button } from "../../components/ui/button";
 
 export const Pcomp2 = () => {
-  const select = useSelector((state) => state.form.FormData.profile);
+  const select = useSelector((state) => state?.form?.FormData?.profile);
   const value = select?.data;
 
   return (

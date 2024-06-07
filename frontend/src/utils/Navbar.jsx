@@ -15,9 +15,9 @@ import { FaSearch } from "react-icons/fa";
 import { useSelector } from "react-redux";
 
 export const Navbar = () => {
-  const select = useSelector((state) => state.form.FormData);
+  const select = useSelector((state) => state?.form?.FormData);
   const [isClicked, setClick] = useState(false);
-  const auth = select.auth === "true"; // Ensure auth is a boolean
+  const auth = select?.auth === "true";
   const handleSearchClick = () => {
     console.log({ auth });
     setClick(!isClicked);

@@ -15,8 +15,8 @@ import { Button } from "@/components/ui/button";
 
 export const Profile = () => {
   const [loading, setLoading] = useState(true);
-  const select = useSelector((state) => state.form.FormData);
-  const authToken = select.authToken;
+  const select = useSelector((state) => state?.form?.FormData);
+  const authToken = select?.authToken;
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -27,7 +27,7 @@ export const Profile = () => {
         const response = await axios.get(
           `http://localhost:3000/api/v1/profile/getUserDetails`,
           {
-            params: { id: select._id },
+            params: { id: select?._id },
             headers: {
               Authorization: `Bearer ${authToken}`,
               "Content-Type": "application/json",
@@ -36,7 +36,7 @@ export const Profile = () => {
         );
         console.log("Response data:", response.data);
         dispatch(update({ ...select, profile: response.data }));
-        console.log(select.profile);
+        console.log(select?.profile);
       } catch (error) {
         console.error("Error fetching user details:", error);
       } finally {
@@ -44,12 +44,12 @@ export const Profile = () => {
       }
     };
 
-    if (authToken && select._id) {
+    if (authToken && select?._id) {
       fetchData();
     } else {
       setLoading(false);
     }
-  }, [select._id, authToken, dispatch]);
+  }, [select?._id, authToken, dispatch]);
 
   return (
     <div>

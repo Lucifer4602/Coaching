@@ -4,9 +4,9 @@ import { useSelector } from "react-redux";
 import { Button } from "../../components/ui/button";
 import { useNavigate } from "react-router-dom";
 export const Scomp = () => {
-  const select = useSelector((select) => select.form.FormData.profile);
-  const value = select.data;
-  const name = value.firstName + " " + value.lastName;
+  const select = useSelector((select) => select?.form?.FormData?.profile);
+  const value = select?.data;
+  const name = value?.firstName + " " + value?.lastName;
 
   const navigate = useNavigate();
   //   console.log(value);
@@ -17,7 +17,7 @@ export const Scomp = () => {
         <div className="my-10"></div>
         <div className="flex flex-row">
           <CardContent>
-            <img src={value.image} className="rounded-full h-[75px]"></img>
+            <img src={value?.image} className="rounded-full h-[75px]"></img>
           </CardContent>
           <CardContent>Change Profile Photo</CardContent>
 

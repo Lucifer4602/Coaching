@@ -8,8 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 
 export const Scomp1 = () => {
-  const select = useSelector((state) => state.form.FormData);
-  const authToken = select.authToken;
+  const select = useSelector((state) => state?.form?.FormData);
+  const authToken = select?.authToken;
 
   const [data, setData] = useState({
     firstName: select.profile.data?.firstName || "",

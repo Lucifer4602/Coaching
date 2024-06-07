@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { Button } from "../../components/ui/button";
 import { useNavigate } from "react-router-dom";
 export const Pcomp = () => {
-  const select = useSelector((select) => select.form.FormData.profile);
+  const select = useSelector((select) => select?.form?.FormData?.profile);
   const value = select?.data;
   const name = value?.firstName + " " + value?.lastName;
 

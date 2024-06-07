@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useSelector } from "react-redux";
 import { Button } from "../../components/ui/button";
 export const Pcomp1 = () => {
-  const select = useSelector((select) => select.form.FormData.profile);
+  const select = useSelector((select) => select?.form?.FormData?.profile);
   const value = select?.data;
   //   console.log(value);
   return (

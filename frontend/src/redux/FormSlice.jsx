@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { PURGE } from "redux-persist";
 
 const initialState = {
   FormData: {
@@ -26,8 +27,12 @@ export const formSlice = createSlice({
       localStorage.setItem("reduxState", JSON.stringify(state));
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(PURGE, (state) => {
+      initialState;
+    });
+  },
 });
 
 export const { update } = formSlice.actions;
-
 export default formSlice.reducer;

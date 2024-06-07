@@ -8,6 +8,9 @@ import { Signup } from "./utils/Signup.jsx";
 import { VerifyOtp } from "./utils/VerifyOtp.jsx";
 import { Profile } from "./utils/Profile.jsx";
 import { Setting } from "./utils/Setting.jsx";
+import { Addcourse } from "./utils/Addcourse.jsx";
+import { Dashboard } from "./utils/Dashboard.jsx";
+import { Mycourse } from "./utils/Mycourse.jsx";
 
 function App() {
   return (
@@ -21,6 +24,9 @@ function App() {
         <Route path="/verifyOtp" element={<VerifyOtp></VerifyOtp>}></Route>
         <Route path="/profile" element={<Profile></Profile>}></Route>
         <Route path="/settings" element={<Setting></Setting>}></Route>
+        <Route path="/add-course" element={<Addcourse></Addcourse>}></Route>
+        <Route path="/dashboard" element={<Dashboard></Dashboard>}></Route>
+        <Route path="/mycourse" element={<Mycourse></Mycourse>}></Route>
       </Routes>
     </Router>
   );

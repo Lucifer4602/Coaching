@@ -10,14 +10,13 @@ import { Pnav } from "./ProfileComp/Pnav.jsx";
 import { Pcomp2 } from "./ProfileComp/Pcomp2.jsx";
 import { update } from "@/redux/FormSlice";
 
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+// import { useNavigate } from "react-router-dom";
 
 export const Profile = () => {
   const [loading, setLoading] = useState(true);
   const select = useSelector((state) => state?.form?.FormData);
   const authToken = select?.authToken;
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -34,9 +33,9 @@ export const Profile = () => {
             },
           }
         );
-        console.log("Response data:", response.data);
+        // console.log("Response data:", response.data);
         dispatch(update({ ...select, profile: response.data }));
-        console.log(select?.profile);
+        // console.log(select?.profile);
       } catch (error) {
         console.error("Error fetching user details:", error);
       } finally {

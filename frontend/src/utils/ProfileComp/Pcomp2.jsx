@@ -2,10 +2,12 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useSelector } from "react-redux";
 import { Button } from "../../components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 export const Pcomp2 = () => {
   const select = useSelector((state) => state?.form?.FormData?.profile);
   const value = select?.data;
+  const navigate = useNavigate();
 
   return (
     <div className="flex flex-col gap-6 ">
@@ -49,6 +51,9 @@ export const Pcomp2 = () => {
             <Button
               variant="destructive"
               className="bg-yellow-500 text-zinc-700 "
+              onClick={() => {
+                navigate("/settings");
+              }}
             >
               Edit
             </Button>

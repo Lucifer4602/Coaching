@@ -18,7 +18,6 @@ export const Login = () => {
   const dispatch = useDispatch();
   const select = useSelector((state) => state?.form?.FormData);
   const navigate = useNavigate();
-
   const submit = async (event) => {
     event.preventDefault();
     try {

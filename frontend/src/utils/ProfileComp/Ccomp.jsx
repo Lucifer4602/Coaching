@@ -1,5 +1,5 @@
-import { Card, CardContent } from "@/components/ui/card";
 import React, { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -13,32 +13,183 @@ import Usetag from "../../hooks/Usetag";
 import { FileUploader } from "react-drag-drop-files";
 import { Button } from "@/components/ui/button";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { DialogClose } from "@radix-ui/react-dialog";
+
+const EditLectureDialog = ({
+  isOpen,
+  onClose,
+  onSave,
+  lectureData,
+  onChange,
+}) => (
+  <Dialog open={isOpen} onOpenChange={onClose}>
+    <DialogContent>
+      <DialogHeader>Editing Lecture</DialogHeader>
+      <div>
+        <label htmlFor="editLtitle">Lecture Title</label>
+        <Input
+          type="text"
+          id="editLtitle"
+          name="Ltitle"
+          value={lectureData.Ltitle}
+          onChange={onChange}
+        />
+      </div>
+      <div>
+        <label htmlFor="editLdescription">Lecture Description</label>
+        <textarea
+          id="editLdescription"
+          rows="4"
+          cols="50"
+          name="Ldescription"
+          value={lectureData.Ldescription}
+          onChange={onChange}
+        />
+      </div>
+      <DialogFooter>
+        <Button onClick={onSave}>Save</Button>
+        <Button variant="ghost" onClick={onClose}>
+          Cancel
+        </Button>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
+);
 
 export const Ccomp = () => {
   const maxTags = 5;
   const { tags, handleAddTag, handleRemoveTag } = Usetag(maxTags);
+  const fileTypes = ["jpg"];
+  const [step, setStep] = useState(1);
 
-  const [name, setName] = useState("");
-  const fileTypes = ["JPG", "PNG", "GIF"];
+  const [data, setData] = useState({
+    section: "",
+    title: "",
+    description: "",
+    price: "",
+    level: "",
+    language: "",
+    Ltitle: "",
+    Ldescription: "",
+  });
+  const [sections, setSections] = useState([]);
+
+  const [editingSection, setEditingSection] = useState(null);
+
+  const [activeSection, setActiveSection] = useState(null);
+
+  const [lectures, setLectures] = useState([]);
+
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editingLectureIndex, setEditingLectureIndex] = useState(null);
+  const [editingLectureSectionIndex, setEditingLectureSectionIndex] =
+    useState(null);
+
+  const handler = (e) => {
+    const { name, value } = e.target;
+    setData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = () => {
+    console.log("Form submitted!");
+  };
+
+  const handleCreateSection = () => {
+    if (editingSection !== null) {
+      const updatedSections = [...sections];
+      updatedSections[editingSection] = data.section;
+      setSections(updatedSections);
+      setEditingSection(null);
+    } else {
+      setSections((prevSections) => [...prevSections, data.section]);
+    }
+    setData({ ...data, section: "" });
+  };
+
+  const handleEditSection = (index) => {
+    setEditingSection(index);
+    setData({ ...data, section: sections[index] });
+  };
+
+  const handleDeleteSection = (index) => {
+    setSections((prevSections) => prevSections.filter((_, i) => i !== index));
+  };
+
+  const handleSaveLecture = () => {
+    const newLecture = {
+      Ltitle: data.Ltitle,
+      Ldescription: data.Ldescription,
+    };
+    const updatedLectures = [...lectures];
+    if (updatedLectures[activeSection]) {
+      updatedLectures[activeSection].push(newLecture);
+    } else {
+      updatedLectures[activeSection] = [newLecture];
+    }
+    setLectures(updatedLectures);
+    setData({ ...data, Ltitle: "", Ldescription: "" });
+  };
+
+  const handleEditLecture = (sectionIndex, lectureIndex) => {
+    const lecture = lectures[sectionIndex][lectureIndex];
+    setData({
+      ...data,
+      Ltitle: lecture.Ltitle,
+      Ldescription: lecture.Ldescription,
+    });
+    setEditingLectureIndex(lectureIndex);
+    setEditingLectureSectionIndex(sectionIndex);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleDeleteLecture = (sectionIndex, lectureIndex) => {
+    const updatedLectures = [...lectures];
+    updatedLectures[sectionIndex].splice(lectureIndex, 1);
+    setLectures(updatedLectures);
+  };
+
+  const handleSaveEditedLecture = () => {
+    const updatedLectures = [...lectures];
+    updatedLectures[editingLectureSectionIndex][editingLectureIndex] = {
+      Ltitle: data.Ltitle,
+      Ldescription: data.Ldescription,
+    };
+    setLectures(updatedLectures);
+    setIsEditDialogOpen(false);
+    setData({ ...data, Ltitle: "", Ldescription: "" });
+  };
+
   return (
     <div className="overflow-scroll">
       <div>Add a Course</div>
 
       <Card>
-        <CardContent>
+        <CardContent style={{ display: step === 1 ? "block" : "none" }}>
           <label htmlFor="title">Course Title</label>
           <Input
             type="text"
             placeholder="Enter course title"
             id="title"
             name="title"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={data.title}
+            onChange={handler}
             className="outline-double"
           />
         </CardContent>
 
-        <CardContent>
+        <CardContent style={{ display: step === 1 ? "block" : "none" }}>
           <label htmlFor="description">Course Description</label>
           <div>
             <textarea
@@ -47,29 +198,33 @@ export const Ccomp = () => {
               placeholder="Enter course description"
               id="description"
               name="description"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={data.description}
+              onChange={handler}
               className="outline-double"
             />
           </div>
         </CardContent>
 
-        <CardContent>
+        <CardContent style={{ display: step === 1 ? "block" : "none" }}>
           <label htmlFor="price">Course Price</label>
           <Input
             type="text"
             placeholder="Enter course price"
             id="price"
             name="price"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={data.price}
+            onChange={handler}
             className="outline-double"
           />
         </CardContent>
 
-        <CardContent>
+        <CardContent style={{ display: step === 1 ? "block" : "none" }}>
           <label htmlFor="level">Course level</label>
-          <Select>
+          <Select
+            onValueChange={(value) =>
+              setData((prev) => ({ ...prev, level: value }))
+            }
+          >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Choose a level" />
             </SelectTrigger>
@@ -82,9 +237,13 @@ export const Ccomp = () => {
           </Select>
         </CardContent>
 
-        <CardContent>
+        <CardContent style={{ display: step === 1 ? "block" : "none" }}>
           <label htmlFor="language">Course language</label>
-          <Select>
+          <Select
+            onValueChange={(value) =>
+              setData((prev) => ({ ...prev, language: value }))
+            }
+          >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Choose a language" />
             </SelectTrigger>
@@ -95,7 +254,7 @@ export const Ccomp = () => {
           </Select>
         </CardContent>
 
-        <CardContent>
+        <CardContent style={{ display: step === 1 ? "block" : "none" }}>
           <label htmlFor="tag">Tags</label>
           <Tag
             tags={tags}
@@ -105,8 +264,8 @@ export const Ccomp = () => {
           />
         </CardContent>
 
-        <CardContent>
-          <label> Coruse Thumbnail</label>
+        <CardContent style={{ display: step === 1 ? "block" : "none" }}>
+          <label>Course Thumbnail</label>
           <FileUploader
             name="file"
             types={fileTypes}
@@ -114,28 +273,123 @@ export const Ccomp = () => {
           />
         </CardContent>
 
-        <CardContent>
-          <label htmlFor="description">Course Description</label>
-          <div>
-            <textarea
-              rows="4"
-              cols="67"
-              placeholder="Enter course description"
-              id="description"
-              name="description"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+        <CardContent style={{ display: step === 2 ? "block" : "none" }}>
+          Course Builder
+        </CardContent>
+        <CardContent style={{ display: step === 2 ? "block" : "none" }}>
+          <div className="border-gray-950 border-2 p-4">
+            <label htmlFor="section">Section Name</label>
+            <Input
+              type="text"
+              placeholder="Enter section name"
+              id="section"
+              name="section"
+              value={data.section}
+              onChange={handler}
               className="outline-double"
             />
+            <Button onClick={handleCreateSection}>
+              {editingSection !== null ? "Update Section" : "Add Section"}
+            </Button>
           </div>
         </CardContent>
+
+        {sections.map((section, index) => (
+          <CardContent key={index} className="flex flex-row">
+            <Collapsible>
+              <CollapsibleTrigger>
+                <div
+                  className="flex flex-row"
+                  onClick={() => setActiveSection(index)}
+                >
+                  <div>{section}</div>
+                </div>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <Dialog>
+                  <DialogTrigger>Add Lecture</DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>Adding Lecture</DialogHeader>
+                    <div>
+                      <label htmlFor="Ltitle">Lecture Title</label>
+                      <Input
+                        type="text"
+                        id="Ltitle"
+                        name="Ltitle"
+                        value={data.Ltitle}
+                        onChange={handler}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="Ldescription">Lecture Description</label>
+                      <textarea
+                        id="Ldescription"
+                        rows="4"
+                        cols="50"
+                        name="Ldescription"
+                        value={data.Ldescription}
+                        onChange={handler}
+                      />
+                    </div>
+                    <DialogClose onClick={handleSaveLecture}>Save</DialogClose>
+                  </DialogContent>
+                </Dialog>
+
+                {(lectures[index] || []).map((lecture, lectureIndex) => (
+                  <div key={lectureIndex}>
+                    <div>{lecture.Ltitle}</div>
+                    <Button
+                      onClick={() => handleEditLecture(index, lectureIndex)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      onClick={() => handleDeleteLecture(index, lectureIndex)}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                ))}
+              </CollapsibleContent>
+            </Collapsible>
+            <Button onClick={() => handleEditSection(index)}>Edit</Button>
+            <Button onClick={() => handleDeleteSection(index)}>Delete</Button>
+          </CardContent>
+        ))}
+
         <CardContent>
-          <Button variant="outline" size="icon" className="h-11 w-20">
-            Next <ChevronRightIcon className="h-4 w-4" />
-          </Button>
+          {step < 3 && (
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-11 w-20"
+              onClick={() => setStep(step + 1)}
+            >
+              Next <ChevronRightIcon className="h-4 w-4" />
+            </Button>
+          )}
+
+          {step === 3 && (
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-11 w-20"
+              onClick={handleSubmit}
+            >
+              Submit
+            </Button>
+          )}
         </CardContent>
         <div className="mt-16"></div>
       </Card>
+
+      <EditLectureDialog
+        isOpen={isEditDialogOpen}
+        onClose={() => setIsEditDialogOpen(false)}
+        onSave={handleSaveEditedLecture}
+        lectureData={{ Ltitle: data.Ltitle, Ldescription: data.Ldescription }}
+        onChange={handler}
+      />
     </div>
   );
 };

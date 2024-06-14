@@ -67,36 +67,42 @@ exports.updateSection = async (req, res) => {
 
 exports.deleteSection = async (req, res) => {
   try {
-    const { sectionId, courseId } = req.params;
-    await course.findByIdAndUpdate(courseId, {
-      $pull: { courseContent: sectionId },
-    });
-    const section = await section.findById(sectionId);
+    const { sectionId, courseId } = req.query;
 
-    if (!section) {
+    const updatedCourse = await course.findByIdAndUpdate(
+      courseId,
+      { $pull: { courseContent: sectionId } },
+      { new: true }
+    );
+
+    const delsec = await section.findById(sectionId);
+    if (!delsec) {
       return res.status(404).json({
         success: false,
-        message: "Section not Found",
+        message: "Section not found",
       });
     }
 
-    await subsection.deleteMany({ _id: { $in: section.subsection } });
+    await subsection.deleteMany({ _id: { $in: delsec.subsection } });
+
     await section.findByIdAndDelete(sectionId);
+
     const courseDetails = await course
       .findById(courseId)
       .populate({ path: "courseContent", populate: { path: "subsection" } })
       .exec();
-    return res.status(201).json({
+
+    return res.status(200).json({
       success: true,
-      message: "section is deleted",
+      message: "Section successfully deleted",
       data: courseDetails,
     });
-
-    // do we need to delete in course
   } catch (error) {
+    console.error(error);
     res.status(503).json({
       success: false,
-      messgae: "section hi ni update ho ri",
+      message: "Failed to delete section",
+      error: error,
     });
   }
 };

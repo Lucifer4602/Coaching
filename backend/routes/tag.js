@@ -7,7 +7,7 @@ const {
   isStudent,
   isAdmin,
 } = require("../middlewares/auth");
-const { showCourses } = require("../controllers/course");
+// const { showCourses } = require("../controllers/course");
 
 router.post("/createTag", auth, isAdmin, createTag);
 router.get("/showTag", showTag);

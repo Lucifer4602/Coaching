@@ -14,11 +14,11 @@ exports.createSubsection = async (req, res) => {
       });
     }
 
-    const video_url = await uploader(video, Krishna);
+    const video_url = await uploader(video, "Krishna");
 
     const newSubsection = await subsection.create({
       title,
-      duration: `${video_url.duration}`,
+      duration: video_url.duration,
       body,
       videoUrl: video_url.secure_url,
     });
@@ -34,13 +34,14 @@ exports.createSubsection = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      message: "subsection is created ",
+      message: "subsection is created",
       updatedSection,
     });
   } catch (error) {
-    res.status(505).json({
+    res.status(503).json({
       success: false,
-      message: "not created subsection",
+      message: "Failed to create subsection",
+      error: error.message,
     });
   }
 };
@@ -51,29 +52,36 @@ exports.updateSubsection = async (req, res) => {
     const video = req.files.videoFile;
 
     if (!title || !body || !duration || !video || !subsectionId) {
-      req.status(403).json({
+      return res.status(403).json({
         success: false,
-        message: "something went wrong",
+        message: "All fields are required",
       });
     }
 
-    const video_url = await uploader(video, Krishna);
+    const video_url = await uploader(video, "Krishna");
 
-    await subsection.findByIdAndUpdate(
+    const updatedSubsection = await subsection.findByIdAndUpdate(
       subsectionId,
-      { title, body, duration, videoUrl: video_url },
+      { title, body, duration, videoUrl: video_url.secure_url },
       { new: true }
     );
 
-    return res.status(201).json({
+    if (!updatedSubsection) {
+      return res.status(404).json({
+        success: false,
+        message: "Subsection not found",
+      });
+    }
+
+    return res.status(200).json({
       success: true,
-      message: "subsection is updated",
+      message: "Subsection updated successfully",
     });
-    // do we need to update in course
   } catch (error) {
-    res.status(503).json({
+    res.status(500).json({
       success: false,
-      messgae: "subsection hi ni update ho ri",
+      message: "Failed to update subsection",
+      error: error.message,
     });
   }
 };
@@ -83,34 +91,41 @@ exports.deleteSubsection = async (req, res) => {
     const { subsectionId, sectionId } = req.body;
 
     if (!subsectionId) {
-      req.status(403).json({
+      return res.status(403).json({
         success: false,
-        message: "something went wrong",
+        message: "Subsection ID is required",
       });
     }
-    await section.findByIdAndUpdate(
-      { _id: sectionId },
-      {
-        $pull: {
-          subsection: subsectionId,
-        },
-      }
-    );
 
-    await subsection.findByIdAndDelete(subsectionId);
-    const updateSection = await section
+    await section.findByIdAndUpdate(sectionId, {
+      $pull: {
+        subsection: subsectionId,
+      },
+    });
+
+    const deletedSubsection = await subsection.findByIdAndDelete(subsectionId);
+
+    if (!deletedSubsection) {
+      return res.status(404).json({
+        success: false,
+        message: "Subsection not found",
+      });
+    }
+
+    const updatedSection = await section
       .findById(sectionId)
       .populate("subsection");
-    return res.status(201).json({
+
+    return res.status(200).json({
       success: true,
-      message: "subsection is deleted",
+      message: "Subsection deleted successfully",
       data: updatedSection,
     });
-    // do we need to update in course
   } catch (error) {
-    res.status(503).json({
+    res.status(500).json({
       success: false,
-      messgae: "subsection hi ni delete ho ri",
+      message: "Failed to delete subsection",
+      error: error.message,
     });
   }
 };

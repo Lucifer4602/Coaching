@@ -41,26 +41,29 @@ exports.updateSection = async (req, res) => {
     const { sectionName, sectionId, courseId } = req.body;
 
     if (!sectionName || !sectionId) {
-      req.status(403).json({
+      return res.status(400).json({
         success: false,
-        message: "something went wrong",
+        message: "Section name and section ID are required.",
       });
     }
 
     await section.findByIdAndUpdate(sectionId, { sectionName }, { new: true });
-    const course = await course
+
+    const courses = await course
       .findById(courseId)
       .populate({ path: "courseContent", populate: { path: "subsection" } })
       .exec();
-    return res.status(201).json({
+
+    return res.status(200).json({
       success: true,
-      message: "section is updated",
+      message: "Section is updated.",
+      courses,
     });
-    // do we need to update in course
   } catch (error) {
     res.status(503).json({
       success: false,
-      messgae: "section hi ni update ho ri",
+      message: "Failed to update section.",
+      error: error.message,
     });
   }
 };

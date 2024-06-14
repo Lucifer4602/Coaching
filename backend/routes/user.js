@@ -11,9 +11,9 @@ const {
 const { resetToken, reset } = require("../controllers/resetPassword");
 const { auth } = require("../middlewares/auth");
 
-router.post("/login", login);
-router.post("/signup", signup);
-router.post("/sendotp", sendOtp);
+router.post("/login", login); //done
+router.post("/signup", signup); //done
+router.post("/sendotp", sendOtp); //done
 router.post("/changepassword", auth, changePassword);
 
 router.post("/resetToken", resetToken);

@@ -123,7 +123,7 @@ exports.editCourse = async (req, res) => {
       .populate({
         path: "courseContent",
         populate: {
-          path: "subSection",
+          path: "subsection",
         },
       })
       .exec();

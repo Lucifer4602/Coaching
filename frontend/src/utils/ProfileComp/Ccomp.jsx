@@ -28,6 +28,7 @@ import {
 import { DialogClose } from "@radix-ui/react-dialog";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const EditLectureDialog = ({
   isOpen,
@@ -35,6 +36,8 @@ const EditLectureDialog = ({
   onSave,
   lectureData,
   onChange,
+  fileTypes,
+  xyz,
 }) => (
   <Dialog open={isOpen} onOpenChange={onClose}>
     <DialogContent>
@@ -60,6 +63,15 @@ const EditLectureDialog = ({
           onChange={onChange}
         />
       </div>
+      <div>
+        <label>Lecture video</label>
+        <FileUploader
+          name="file"
+          types={fileTypes}
+          className="outline-double"
+          handleChange={xyz}
+        />
+      </div>
       <DialogFooter>
         <Button onClick={onSave}>Save</Button>
         <Button variant="ghost" onClick={onClose}>
@@ -73,6 +85,7 @@ const EditLectureDialog = ({
 export const Ccomp = () => {
   const select = useSelector((state) => state?.form?.FormData);
   const authToken = select?.authToken;
+  const navigate = useNavigate();
 
   const [course_id, setCourseId] = useState("");
   const maxTags = 5;
@@ -118,16 +131,43 @@ export const Ccomp = () => {
     setThumbnail(file);
   };
 
-  const handleSubmit = () => {
-    console.log("Form submitted!");
+  const handleSubmit = async () => {
+    try {
+      navigate("/mycourse");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleCreateSection = async () => {
     if (editingSection !== null) {
       const updatedSections = [...sections];
       updatedSections[editingSection] = data.section;
-      setSections(updatedSections);
-      setEditingSection(null);
+      // console.log(data.section);
+      // console.log(course_id);
+      // console.log(sectionId[editingSection]);
+
+      try {
+        const formData = new FormData();
+        formData.append("sectionName", data.section);
+        formData.append("sectionId", sectionId[editingSection]);
+        formData.append("courseId", course_id);
+        await axios.put(
+          "http://localhost:3000/api/v1/course/updateSection",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        setSections(updatedSections);
+
+        setEditingSection(null);
+      } catch (err) {
+        console.error(err);
+      }
     } else {
       setSections((prevSections) => [...prevSections, data.section]);
       try {
@@ -169,6 +209,7 @@ export const Ccomp = () => {
           },
           headers: {
             Authorization: `Bearer ${authToken}`,
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -206,10 +247,18 @@ export const Ccomp = () => {
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
+            "Content-Type": "multipart/form-data",
           },
         }
       );
-      const newsubsectionId = { _id: response.data.updatedSection._id };
+      // console.log(response.data);
+      const newsubsectionId = {
+        _id: response.data.updatedSection.subsection[
+          response.data.updatedSection.subsection.length - 1
+        ]._id,
+      };
+
+      // console.log(newsubsectionId);
       const values = [...subsectionId];
 
       if (Array.isArray(values[activeSection])) {
@@ -226,7 +275,7 @@ export const Ccomp = () => {
     setData({ ...data, Ltitle: "", Ldescription: "" });
   };
 
-  const handleEditLecture = (sectionIndex, lectureIndex) => {
+  const handleEditLecture = async (sectionIndex, lectureIndex) => {
     const lecture = lectures[sectionIndex][lectureIndex];
     setData({
       ...data,
@@ -239,42 +288,73 @@ export const Ccomp = () => {
   };
 
   const handleDeleteLecture = async (sectionIndex, lectureIndex) => {
-    const updatedLectures = [...lectures];
-    updatedLectures[sectionIndex].splice(lectureIndex, 1);
-    setLectures(updatedLectures);
-
-    const updates = [...subsectionId];
-    const y = updates[sectionIndex][lectureIndex]._id;
-    updates[sectionIndex].splice(lectureIndex, 1);
-    setSubsectionId(updates);
-
     try {
-      const formData = new FormData();
-      formData.append("subsectionId", y);
-      formData.append("sectionId", sectionId[sectionIndex]);
-      const response = await axios.delete(
-        "http://localhost:3000/api/v1/course/deleteSubSection",
-        formData,
+      const updatedLectures = [...lectures];
+
+      const updates = [...subsectionId];
+      const y = updates[sectionIndex][lectureIndex]._id;
+      // console.log(y);
+      // console.log(sectionId[sectionIndex]);
+
+      await axios.delete(
+        `http://localhost:3000/api/v1/course/deleteSubSection`,
         {
+          params: {
+            subsectionId: y,
+            sectionId: sectionId[sectionIndex],
+          },
           headers: {
             Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
           },
         }
       );
+      updatedLectures[sectionIndex].splice(lectureIndex, 1);
+      setLectures(updatedLectures);
+      updates[sectionIndex].splice(lectureIndex, 1);
+      setSubsectionId(updates);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleSaveEditedLecture = () => {
+  const handleSaveEditedLecture = async () => {
     const updatedLectures = [...lectures];
     updatedLectures[editingLectureSectionIndex][editingLectureIndex] = {
       Ltitle: data.Ltitle,
       Ldescription: data.Ldescription,
     };
-    setLectures(updatedLectures);
-    setIsEditDialogOpen(false);
-    setData({ ...data, Ltitle: "", Ldescription: "" });
+    try {
+      const formData = new FormData();
+      formData.append(
+        "subsectionId",
+        subsectionId[editingLectureSectionIndex][editingLectureIndex]._id
+      );
+      formData.append("title", data.Ltitle);
+      formData.append("body", data.Ldescription);
+      formData.append("duration", "23");
+      formData.append("videoFile", video);
+      console.log(
+        subsectionId[editingLectureSectionIndex][editingLectureIndex]
+      );
+
+      const response = await axios.put(
+        `http://localhost:3000/api/v1/course/updateSubSection`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      setLectures(updatedLectures);
+      setIsEditDialogOpen(false);
+      setData({ ...data, Ltitle: "", Ldescription: "" });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const saveHandler = async () => {
@@ -568,6 +648,8 @@ export const Ccomp = () => {
         onSave={handleSaveEditedLecture}
         lectureData={{ Ltitle: data.Ltitle, Ldescription: data.Ldescription }}
         onChange={handler}
+        fileTypes={fileTypes}
+        xyz={(file) => setVideo(file)}
       />
     </div>
   );

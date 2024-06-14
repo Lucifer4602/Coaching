@@ -88,10 +88,10 @@ exports.updateSubsection = async (req, res) => {
 
 exports.deleteSubsection = async (req, res) => {
   try {
-    const { subsectionId, sectionId } = req.body;
+    const { subsectionId, sectionId } = req.query;
 
     if (!subsectionId) {
-      return res.status(403).json({
+      return res.status(410).json({
         success: false,
         message: "Subsection ID is required",
       });

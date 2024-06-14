@@ -37,14 +37,14 @@ const {
 } = require("../middlewares/auth");
 
 router.post("/createCourse", auth, isInstructor, createCourse); //done
-router.post("/addSection", auth, isInstructor, createSection);
+router.post("/addSection", auth, isInstructor, createSection); //done
 
-router.post("/updateSection", auth, isInstructor, updateSection);
+router.put("/updateSection", auth, isInstructor, updateSection); //done
 router.delete("/deleteSection", auth, isInstructor, deleteSection); //done
 
-router.post("/updateSubSection", auth, isInstructor, updateSubsection);
+router.put("/updateSubSection", auth, isInstructor, updateSubsection); //done
 
-router.delete("/deleteSubSection", auth, isInstructor, deleteSubsection);
+router.delete("/deleteSubSection", auth, isInstructor, deleteSubsection); //done
 router.post("/addSubSection", auth, isInstructor, createSubsection); //done
 
 router.get("/getAllCourses", showCourses);

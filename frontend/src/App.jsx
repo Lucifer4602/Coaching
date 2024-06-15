@@ -11,6 +11,7 @@ import { Setting } from "./utils/Setting.jsx";
 import { Addcourse } from "./utils/Addcourse.jsx";
 import { Dashboard } from "./utils/Dashboard.jsx";
 import { Mycourse } from "./utils/Mycourse.jsx";
+import { Ecomp } from "./utils/ProfileComp/Ecomp.jsx";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path="/add-course" element={<Addcourse></Addcourse>}></Route>
         <Route path="/dashboard" element={<Dashboard></Dashboard>}></Route>
         <Route path="/mycourse" element={<Mycourse></Mycourse>}></Route>
+        <Route path="/editCourse" element={<Ecomp></Ecomp>}></Route>
       </Routes>
     </Router>
   );

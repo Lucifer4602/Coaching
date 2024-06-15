@@ -15,6 +15,7 @@ const initialState = {
     _id: "",
     authToken: "",
     profile: {},
+    resp: {},
   },
 };
 

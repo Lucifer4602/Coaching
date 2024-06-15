@@ -644,7 +644,10 @@ export const Ccomp = () => {
 
       <EditLectureDialog
         isOpen={isEditDialogOpen}
-        onClose={() => setIsEditDialogOpen(false)}
+        onClose={() => {
+          setData({ ...data, Ltitle: "", Ldescription: "" });
+          setIsEditDialogOpen(false);
+        }}
         onSave={handleSaveEditedLecture}
         lectureData={{ Ltitle: data.Ltitle, Ldescription: data.Ldescription }}
         onChange={handler}

@@ -96,9 +96,9 @@ exports.editCourse = async (req, res) => {
 
     if (req.files) {
       const thumbnail = req.files.thumbnail;
-      const uploader = await uploader(thumbnail, "Krishna");
+      const uploade = await uploader(thumbnail, "Krishna");
 
-      courses.thumbnail = uploader.secure_url;
+      courses.thumbnail = uploade.secure_url;
     }
 
     for (const key in updates) {
@@ -175,8 +175,9 @@ exports.showCourses = async (req, res) => {
 exports.getCourse = async (req, res) => {
   try {
     const { courseId } = req.body;
+
     const courseDetails = await course
-      .find({ _id: courseId })
+      .findOne(courseId)
       .populate({
         path: "instructor",
         populate: {
@@ -185,15 +186,16 @@ exports.getCourse = async (req, res) => {
       })
       .populate("tag")
       .populate("ratingAndReview")
-      .populate({ path: "courseContent", populate: "susbection" })
+      .populate({ path: "courseContent", populate: "subsection" })
       .exec();
 
     if (!courseDetails) {
-      return res.status(402).json({
+      return res.status(404).json({
         success: false,
-        message: "could not fetch all data",
+        message: "Course not found",
       });
     }
+
     return res.status(200).json({
       success: true,
       data: {
@@ -201,13 +203,13 @@ exports.getCourse = async (req, res) => {
       },
     });
   } catch (error) {
-    return res.status(502).json({
+    console.error(error);
+    return res.status(500).json({
       success: false,
-      message: "could not fetch all data",
+      message: "Internal server error",
     });
   }
 };
-
 exports.getInstructorCourses = async (req, res) => {
   try {
     const instructor = req.user.id;
@@ -229,7 +231,7 @@ exports.getInstructorCourses = async (req, res) => {
 
 exports.deleteCourse = async (req, res) => {
   try {
-    const { courseId } = req.body;
+    const { courseId } = req.query;
 
     const courseDetails = await course.findById(courseId);
     if (!courseDetails) {
@@ -240,35 +242,31 @@ exports.deleteCourse = async (req, res) => {
 
     for (const student of students) {
       await user.findByIdAndUpdate(student, {
-        $pull: {
-          courses: courseId,
-        },
+        $pull: { courses: courseId },
       });
     }
 
-    const section = courseDetails.courseContent;
+    const sections = courseDetails.courseContent;
 
-    for (const sectionId of section) {
-      const getSection = await Section.findById(sectionId);
-      if (getsection) {
-        const subsections = getsection.subsection;
-        for (const subsectionId of subsections) {
-          await Subsection.findByIdAndUpdate(subsectionId);
-        }
+    for (const sectionId of sections) {
+      const subsections = await Subsection.find({ section: sectionId });
+      for (const subsection of subsections) {
+        await Subsection.findByIdAndDelete(subsection._id);
       }
       await Section.findByIdAndDelete(sectionId);
     }
 
     await course.findByIdAndDelete(courseId);
 
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       message: "Course deleted successfully",
     });
   } catch (error) {
     res.status(502).json({
-      succcess: false,
-      message: "not able to delete",
+      success: false,
+      message: "Unable to delete course",
+      error: error.message,
     });
   }
 };

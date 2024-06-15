@@ -47,12 +47,12 @@ router.put("/updateSubSection", auth, isInstructor, updateSubsection); //done
 router.delete("/deleteSubSection", auth, isInstructor, deleteSubsection); //done
 router.post("/addSubSection", auth, isInstructor, createSubsection); //done
 
-router.get("/getAllCourses", showCourses);
-router.get("/getCourse", getCourse);
+router.get("/getAllCourses", showCourses); //done
+router.get("/getCourse", getCourse); // done
 // router.post("/getFullCourseDetails", auth, getFullCourseDetails);
-router.post("/editCourse", auth, isInstructor, editCourse);
-router.get("/getInstructorCourses", auth, isInstructor, getInstructorCourses);
-router.delete("/deleteCourse", deleteCourse);
+router.post("/editCourse", auth, isInstructor, editCourse); //done
+router.get("/getInstructorCourses", auth, isInstructor, getInstructorCourses); //done
+router.delete("/deleteCourse", deleteCourse); //done
 
 router.post("/updateCourseProgress", auth, isStudent, updateCourseProgress);
 

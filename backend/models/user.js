@@ -1,6 +1,6 @@
-const mongo = require("mongoose");
+const mongoose = require("mongoose");
 
-const user = new mongo.Schema(
+const userSchema = new mongoose.Schema(
   {
     firstName: {
       type: String,
@@ -18,9 +18,8 @@ const user = new mongo.Schema(
       type: String,
       required: true,
     },
-
     additional: {
-      type: mongo.Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "profile",
     },
     role: {
@@ -30,7 +29,7 @@ const user = new mongo.Schema(
     },
     courses: [
       {
-        type: mongo.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "course",
       },
     ],
@@ -39,7 +38,7 @@ const user = new mongo.Schema(
     },
     progress: [
       {
-        type: mongo.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "progress",
       },
     ],
@@ -49,12 +48,22 @@ const user = new mongo.Schema(
     expireTime: {
       type: Date,
     },
+    wishlist: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "course",
+      },
+    ],
+    cart: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "course",
+      },
+    ],
   },
   {
     timestamps: true,
   }
 );
 
-module.exports = mongo.model("user", user);
-
-// active approved timestamp
+module.exports = mongoose.model("user", userSchema);

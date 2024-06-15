@@ -9,9 +9,9 @@ const {
 } = require("../controllers/profile");
 
 router.delete("/deleteProfile", auth, deleteAccount);
-router.put("/updateProfile", auth, updateProfile);
+router.put("/updateProfile", auth, updateProfile); //done
 router.get("/getUserDetails", auth, getAllUserDetails);
 
-router.get("/instructorDashboard", auth, isInstructor, instructorDashboard);
+router.get("/instructorDashboard", auth, isInstructor, instructorDashboard); //done
 
 module.exports = router;

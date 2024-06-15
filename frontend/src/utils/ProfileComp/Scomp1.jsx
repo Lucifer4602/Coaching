@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { update } from "@/redux/FormSlice";
 import { Button } from "../../components/ui/button";
@@ -10,18 +10,32 @@ import axios from "axios";
 export const Scomp1 = () => {
   const select = useSelector((state) => state?.form?.FormData);
   const authToken = select?.authToken;
+  const [loading, setLoading] = useState(false);
 
   const [data, setData] = useState({
-    firstName: select.profile.data?.firstName || "",
-    lastName: select.profile.data?.lastName || "",
-    dob: select.profile.data?.dob || "",
-    phoneNumber: select.profile.data?.phoneNumber || "",
-    gender: select.profile.data?.gender || "",
-    about: select.profile.data?.about || "",
+    firstName: "",
+    lastName: "",
+    dob: "",
+    phoneNumber: "",
+    gender: "",
+    about: "",
   });
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (select.profile?.data) {
+      setData({
+        firstName: select.profile.data.firstName || "",
+        lastName: select.profile.data.lastName || "",
+        dob: select.profile.data.dob || "",
+        phoneNumber: select.profile.data.phoneNumber || "",
+        gender: select.profile.data.gender || "",
+        about: select.profile.data.about || "",
+      });
+    }
+  }, [select]);
 
   const handler = (event) => {
     const { name, value } = event.target;
@@ -31,6 +45,7 @@ export const Scomp1 = () => {
   const submitHandler = async (event) => {
     event.preventDefault();
     try {
+      setLoading(true);
       await axios.put(
         `http://localhost:3000/api/v1/profile/updateProfile?id=${select._id}`,
         data,
@@ -41,17 +56,20 @@ export const Scomp1 = () => {
           },
         }
       );
-      // Dispatch action to update profile data in Redux store
+
       dispatch(
         update({
           ...select,
-          profile: { ...select.profile, data }, // Update profile data
-          isTrue: "true",
+          profile: { ...select.profile, data },
+          isTrue: true,
+          hello: true,
         })
       );
       navigate("/profile");
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -86,10 +104,10 @@ export const Scomp1 = () => {
                 />
               </CardContent>
               <CardContent>
-                <label htmlFor="phoneNumber">phoneNumber No.</label>
+                <label htmlFor="phoneNumber">Phone Number</label>
                 <Input
                   type="text"
-                  placeholder="phoneNumber"
+                  placeholder="Phone Number"
                   id="phoneNumber"
                   name="phoneNumber"
                   value={data.phoneNumber}
@@ -134,8 +152,8 @@ export const Scomp1 = () => {
             </div>
           </div>
         </Card>
-        <Button variant="ghost" type="submit">
-          Save
+        <Button variant="ghost" type="submit" disabled={loading}>
+          {loading ? "Saving..." : "Save"}
         </Button>
       </form>
     </div>

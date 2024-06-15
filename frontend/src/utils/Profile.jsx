@@ -10,17 +10,16 @@ import { Pnav } from "./ProfileComp/Pnav.jsx";
 import { Pcomp2 } from "./ProfileComp/Pcomp2.jsx";
 import { update } from "@/redux/FormSlice";
 
-// import { useNavigate } from "react-router-dom";
-
 export const Profile = () => {
   const [loading, setLoading] = useState(true);
   const select = useSelector((state) => state?.form?.FormData);
   const authToken = select?.authToken;
-  // const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!authToken || !select?._id) return;
+
       try {
         setLoading(true);
         const response = await axios.get(
@@ -33,39 +32,37 @@ export const Profile = () => {
             },
           }
         );
-        // console.log("Response data:", response.data);
-        dispatch(update({ ...select, profile: response.data }));
-        // console.log(select?.profile);
+
+        setTimeout(() => {
+          dispatch(update({ ...select, profile: response.data }));
+          setLoading(false);
+        }, 1000);
       } catch (error) {
         console.error("Error fetching user details:", error);
-      } finally {
         setLoading(false);
       }
     };
 
-    if (authToken && select?._id) {
-      fetchData();
-    } else {
-      setLoading(false);
-    }
-  }, [select?._id, authToken, dispatch]);
+    fetchData();
+  }, [select?._id, authToken, dispatch, select?.hello]);
 
   return (
     <div>
       <Navbar />
-
-      <Separator className=" bg-slate-900" />
+      <Separator className="bg-slate-900" />
       <div className="flex flex-row h-screen">
         <Pnav />
         <div className="w-[80%] bg-slate-900">
           <ScrollArea className="h-[100%] w-[70%] mx-auto">
             {loading ? (
-              <div className="flex flex-col gap-5"></div>
+              <div className="flex flex-col gap-5">
+                <p>Loading...</p>
+              </div>
             ) : (
               <div className="flex flex-col gap-5">
-                <Pcomp></Pcomp>
-                <Pcomp1></Pcomp1>
-                <Pcomp2></Pcomp2>
+                <Pcomp />
+                <Pcomp1 />
+                <Pcomp2 />
               </div>
             )}
           </ScrollArea>

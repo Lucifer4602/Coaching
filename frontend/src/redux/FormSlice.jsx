@@ -18,6 +18,7 @@ const initialState = {
     resp: {},
     courses: [],
     c_id: "",
+    hello: "false",
   },
 };
 
@@ -29,13 +30,17 @@ export const formSlice = createSlice({
       state.FormData = action.payload;
       localStorage.setItem("reduxState", JSON.stringify(state));
     },
+    reset: (state) => {
+      state.FormData = initialState.FormData;
+      localStorage.removeItem("reduxState");
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(PURGE, (state) => {
-      initialState;
+      state = initialState;
     });
   },
 });
 
-export const { update } = formSlice.actions;
+export const { update, reset } = formSlice.actions;
 export default formSlice.reducer;

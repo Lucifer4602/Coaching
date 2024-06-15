@@ -154,9 +154,11 @@ exports.showCourses = async (req, res) => {
           instructor: true,
           ratingAndReview: true,
           studentsEnrolled: true,
+          tag: true,
         }
       )
       .populate("instructor")
+      .populate("tag")
       .exec();
 
     return res.status(200).json({
@@ -174,14 +176,15 @@ exports.showCourses = async (req, res) => {
 
 exports.getCourse = async (req, res) => {
   try {
-    const { courseId } = req.body;
+    const { courseId } = req.query;
 
     const courseDetails = await course
-      .findOne(courseId)
+      .findById(courseId)
       .populate({
         path: "instructor",
         populate: {
           path: "additional",
+          path: "courses",
         },
       })
       .populate("tag")
@@ -210,6 +213,7 @@ exports.getCourse = async (req, res) => {
     });
   }
 };
+
 exports.getInstructorCourses = async (req, res) => {
   try {
     const instructor = req.user.id;
@@ -239,15 +243,16 @@ exports.deleteCourse = async (req, res) => {
     }
 
     const students = courseDetails.studentsEnrolled;
-
-    for (const student of students) {
-      await user.findByIdAndUpdate(student, {
+    for (const studentId of students) {
+      await user.findByIdAndUpdate(studentId, {
         $pull: { courses: courseId },
       });
     }
 
-    const sections = courseDetails.courseContent;
+    const inst = courseDetails.instructor;
+    await user.findByIdAndUpdate(inst, { $pull: { courses: courseId } });
 
+    const sections = courseDetails.courseContent;
     for (const sectionId of sections) {
       const subsections = await Subsection.find({ section: sectionId });
       for (const subsection of subsections) {

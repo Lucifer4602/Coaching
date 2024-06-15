@@ -27,12 +27,16 @@ export const Login = () => {
       );
       const userId = response.data.user1._id;
       const authToken = response.data.token;
+      const role = response.data.user1.role;
+      // console.log(role);
+      // console.log(response);
 
       const updated = {
         ...select,
         auth: "true",
         _id: userId,
         authToken: authToken,
+        role: role,
       };
       dispatch(update(updated));
       navigate("/profile");

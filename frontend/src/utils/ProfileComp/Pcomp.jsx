@@ -3,13 +3,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useSelector } from "react-redux";
 import { Button } from "../../components/ui/button";
 import { useNavigate } from "react-router-dom";
+
 export const Pcomp = () => {
-  const select = useSelector((select) => select?.form?.FormData?.profile);
+  const select = useSelector((state) => state?.form?.FormData?.profile);
   const value = select?.data;
   const name = value?.firstName + " " + value?.lastName;
 
   const navigate = useNavigate();
-  //   console.log(value);
+
   return (
     <div className="flex flex-col gap-6 justify-around">
       <div className="font-bold text-4xl text-white ">My Profile</div>
@@ -17,7 +18,11 @@ export const Pcomp = () => {
         <div className="my-10"></div>
         <div className="flex flex-row">
           <CardContent>
-            <img src={value?.image} className="rounded-full h-[75px]"></img>
+            <img
+              src={value?.image}
+              className="rounded-full h-[75px]"
+              alt="Profile"
+            />
           </CardContent>
           <CardContent>
             <p>{name}</p>

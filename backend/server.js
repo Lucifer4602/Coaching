@@ -4,6 +4,7 @@ const userRoutes = require("./routes/user");
 const profileRoutes = require("./routes/profile");
 const courseRoutes = require("./routes/courses");
 const tagsRoutes = require("./routes/tag");
+const cartRoutes = require("./routes/cart");
 const fileUpload = require("express-fileupload");
 const { cloudinaryConnect } = require("./cloudinary");
 
@@ -48,5 +49,6 @@ app.use("/api/v1/profile", profileRoutes);
 app.use("/api/v1/course", courseRoutes);
 app.use("/api/v1/tags", tagsRoutes);
 app.use("/api/v1/contact", contactUs);
+app.use("/api/v1/cart", cartRoutes);
 
 db();

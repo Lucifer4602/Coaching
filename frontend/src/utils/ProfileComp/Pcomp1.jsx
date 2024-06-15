@@ -3,11 +3,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useSelector } from "react-redux";
 import { Button } from "../../components/ui/button";
 import { useNavigate } from "react-router-dom";
+
 export const Pcomp1 = () => {
-  const select = useSelector((select) => select?.form?.FormData?.profile);
+  const select = useSelector((state) => state?.form?.FormData?.profile);
   const value = select?.data;
   const navigate = useNavigate();
-  //   console.log(value);
+
   return (
     <div className="flex flex-col gap-6 ">
       <Card>

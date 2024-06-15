@@ -14,6 +14,8 @@ import { Mycourse } from "./utils/Mycourse.jsx";
 import { Ecomp } from "./utils/ProfileComp/Ecomp.jsx";
 import { Query } from "./utils/Query.jsx";
 import { CourseDetails } from "./utils/CourseDetails.jsx";
+import { EnrolledCourses } from "./utils/EnrolledCourses.jsx";
+import { Wishlist } from "./utils/Wishlist.jsx";
 
 function App() {
   return (
@@ -35,6 +37,11 @@ function App() {
         <Route path="/Android development" element={<Query></Query>}></Route>
         <Route path="/Devops" element={<Query></Query>}></Route>
         <Route path="/Blockchain" element={<Query></Query>}></Route>
+        <Route
+          path="/Enrolled-courses"
+          element={<EnrolledCourses></EnrolledCourses>}
+        ></Route>
+        <Route path="/Wishlist" element={<Wishlist></Wishlist>}></Route>
         <Route
           path="/CourseDetails"
           element={<CourseDetails></CourseDetails>}

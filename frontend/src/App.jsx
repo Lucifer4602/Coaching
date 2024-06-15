@@ -12,6 +12,8 @@ import { Addcourse } from "./utils/Addcourse.jsx";
 import { Dashboard } from "./utils/Dashboard.jsx";
 import { Mycourse } from "./utils/Mycourse.jsx";
 import { Ecomp } from "./utils/ProfileComp/Ecomp.jsx";
+import { Query } from "./utils/Query.jsx";
+import { CourseDetails } from "./utils/CourseDetails.jsx";
 
 function App() {
   return (
@@ -29,6 +31,14 @@ function App() {
         <Route path="/dashboard" element={<Dashboard></Dashboard>}></Route>
         <Route path="/mycourse" element={<Mycourse></Mycourse>}></Route>
         <Route path="/editCourse" element={<Ecomp></Ecomp>}></Route>
+        <Route path="/Web development" element={<Query></Query>}></Route>
+        <Route path="/Android development" element={<Query></Query>}></Route>
+        <Route path="/Devops" element={<Query></Query>}></Route>
+        <Route path="/Blockchain" element={<Query></Query>}></Route>
+        <Route
+          path="/CourseDetails"
+          element={<CourseDetails></CourseDetails>}
+        ></Route>
       </Routes>
     </Router>
   );

@@ -31,8 +31,9 @@ import {
 } from "@/components/ui/dialog";
 import { DialogClose } from "@radix-ui/react-dialog";
 import axios from "axios";
-import { useSelector } from "react-redux";
+// import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+// import { update } from "@/redux/FormSlice";
 
 const EditLectureDialog = ({
   isOpen,
@@ -90,8 +91,9 @@ export const Ecomp = () => {
   const select = useSelector((state) => state?.form?.FormData);
   const authToken = select?.authToken;
   const navigate = useNavigate();
+  // const dispatch = useDispatch();
   const resp = useSelector((state) => state?.form?.FormData?.resp);
-  //   console.log(resp);
+  // console.log(resp);
 
   const [course_id, setCourseId] = useState(resp._id);
   const maxTags = 5;

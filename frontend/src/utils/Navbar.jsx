@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { IoClose } from "react-icons/io5";
 import { motion } from "framer-motion";
@@ -12,7 +12,10 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
 import { FaSearch } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { update } from "@/redux/FormSlice";
+import { useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
   const select = useSelector((state) => state?.form?.FormData);
@@ -22,6 +25,24 @@ export const Navbar = () => {
     console.log({ auth });
     setClick(!isClicked);
   };
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/api/v1/course/getAllCourses"
+        );
+
+        const x = response.data.data;
+        dispatch(update({ ...select, courses: x }));
+      } catch (er) {
+        console.log(er);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <div className="flex flex-row justify-evenly bg-zinc-500 p-3 flex-wrap sticky">
@@ -51,16 +72,24 @@ export const Navbar = () => {
               <NavigationMenuContent>
                 <ul className="flex flex-col gap-2 flex-wrap pl-10 pr-10 pt-2 pb-2">
                   <li>
-                    <NavigationMenuLink href="/">Web Dev</NavigationMenuLink>
+                    <NavigationMenuLink href="/Web development">
+                      Web Dev
+                    </NavigationMenuLink>
                   </li>
                   <li>
-                    <NavigationMenuLink href="/">Andro Dev</NavigationMenuLink>
+                    <NavigationMenuLink href="/Android development">
+                      Andro Dev
+                    </NavigationMenuLink>
                   </li>
                   <li>
-                    <NavigationMenuLink href="/">Devops</NavigationMenuLink>
+                    <NavigationMenuLink href="/Devops">
+                      Devops
+                    </NavigationMenuLink>
                   </li>
                   <li>
-                    <NavigationMenuLink href="/">Blockchain</NavigationMenuLink>
+                    <NavigationMenuLink href="/Blockchain">
+                      Blockchain
+                    </NavigationMenuLink>
                   </li>
                 </ul>
               </NavigationMenuContent>

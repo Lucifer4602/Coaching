@@ -8,8 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Tag } from "../../hooks/Tag";
-import Usetag from "../../hooks/Usetag";
+
 import { FileUploader } from "react-drag-drop-files";
 import { Button } from "@/components/ui/button";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
@@ -88,9 +87,8 @@ export const Ccomp = () => {
   const navigate = useNavigate();
 
   const [course_id, setCourseId] = useState("");
-  const maxTags = 5;
-  const { tags, handleAddTag, handleRemoveTag } = Usetag(maxTags);
-  const fileTypes = ["jpg", "mp4"];
+
+  const fileTypes = ["jpg", "mp4", "jpeg"];
   const [step, setStep] = useState(1);
 
   const [data, setData] = useState({
@@ -103,6 +101,7 @@ export const Ccomp = () => {
     Ltitle: "",
     Ldescription: "",
     benefits: "",
+    tag: "",
   });
 
   const [thumbnail, setThumbnail] = useState(null);
@@ -363,7 +362,7 @@ export const Ccomp = () => {
       formData.append("courseName", data.title);
       formData.append("courseDescription", data.description);
       formData.append("whatIsThis", data.benefits);
-      formData.append("tag", "666034c1cf195e6592168fbf");
+      formData.append("tag", "666db07fdbe97a8ec048bed7");
       formData.append("price", data.price);
       if (thumbnail) {
         formData.append("thumbnailImage", thumbnail);
@@ -472,11 +471,14 @@ export const Ccomp = () => {
 
         <CardContent style={{ display: step === 1 ? "block" : "none" }}>
           <label htmlFor="tag">Tags</label>
-          <Tag
-            tags={tags}
-            addTag={handleAddTag}
-            removeTag={handleRemoveTag}
-            maxTags={maxTags}
+          <Input
+            type="text"
+            placeholder="Enter category"
+            id="tag"
+            name="tag"
+            value={data.tag}
+            onChange={handler}
+            className="outline-double"
           />
         </CardContent>
 

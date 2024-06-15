@@ -16,6 +16,8 @@ const initialState = {
     authToken: "",
     profile: {},
     resp: {},
+    courses: [],
+    c_id: "",
   },
 };
 

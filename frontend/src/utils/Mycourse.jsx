@@ -64,11 +64,11 @@ export const Mycourse = () => {
 
   const editHandler = async (courseId) => {
     try {
-      // console.log(courseId);
       const response = await axios.get(
         "http://localhost:3000/api/v1/course/getCourse",
-        courseId,
+
         {
+          params: { courseId: courseId },
           headers: {
             Authorization: `Bearer ${authToken}`,
             "Content-Type": "application/json",
@@ -76,11 +76,12 @@ export const Mycourse = () => {
         }
       );
       const x = response.data.data.courseDetails;
+      // console.log(response.data);
 
       dispatch(update({ ...formData, resp: x }));
       navigate("/editCourse");
     } catch (error) {
-      console.log("Error deleting course:", error);
+      console.log("Error editing course:", error);
     }
   };
   return (

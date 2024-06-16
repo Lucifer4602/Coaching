@@ -5,6 +5,8 @@ const {
   removeFromWishlist,
   addToCart,
   removeFromCart,
+  checkWishlistStatus,
+  checkCartStatus,
 } = require("../controllers/cart");
 
 const { auth } = require("../middlewares/auth");
@@ -15,6 +17,10 @@ router.delete("/removeWishlist", auth, removeFromWishlist);
 
 // Routes for cart
 router.post("/addCart", auth, addToCart);
-router.delete("removeCart", auth, removeFromCart);
+router.delete("/removeCart", auth, removeFromCart);
+
+router.get("/checkWishlistStatus", auth, checkWishlistStatus);
+
+router.get("/checkCartStatus", auth, checkCartStatus);
 
 module.exports = router;

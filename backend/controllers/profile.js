@@ -98,7 +98,12 @@ exports.getAllUserDetails = async (req, res) => {
     const id = req.user.id;
     // console.log(req.user);
     // console.log(id);
-    const userDetails = await user.findById(id).populate("additional").exec();
+    const userDetails = await user
+      .findById(id)
+      .populate("additional")
+      .populate("wishlist")
+      .populate("cart")
+      .exec();
     res.status(200).json({
       success: true,
       message: "User Data fetched successfully",

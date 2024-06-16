@@ -13,20 +13,20 @@ import { Button } from "@/components/ui/button";
 import { FaSearch } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { update } from "@/redux/FormSlice";
+import { reset, update } from "@/redux/FormSlice";
 import { useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
   const select = useSelector((state) => state?.form?.FormData);
-  const role = select.role;
+  const [data, setData] = useState("");
   const [isClicked, setClick] = useState(false);
   const auth = select?.auth === "true";
-  const handleSearchClick = () => {
-    console.log({ auth });
-    setClick(!isClicked);
-  };
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const handleSearchClick = () => {
+    setClick(!isClicked);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,6 +44,19 @@ export const Navbar = () => {
     fetchData();
   }, []);
 
+  const handleLogout = () => {
+    dispatch(reset());
+
+    navigate("/login");
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      dispatch(update({ ...select, query: data }));
+      navigate("/search");
+    }
+  };
+
   return (
     <div className="flex flex-row justify-evenly bg-zinc-500 p-3 flex-wrap sticky z-50">
       <div className="flex flex-row gap-1">
@@ -52,6 +65,7 @@ export const Navbar = () => {
           height="20px"
           width="60px"
           className="rounded-full"
+          alt="Logo"
         />
         <div className="content-center">Dummy</div>
       </div>
@@ -139,18 +153,42 @@ export const Navbar = () => {
               </NavigationMenuList>
             </NavigationMenu>
           </>
-        ) : null}
-
-        {role === "student" && (
-          <NavigationMenu>
-            <NavigationMenuList>
-              <NavigationMenuItem>
-                <NavigationMenuLink href="/cart">
-                  <Button variant="outline">Cart</Button>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
+        ) : (
+          <>
+            <NavigationMenu>
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger>Dashboard</NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="flex flex-col gap-2 pl-10 pr-10 pt-2 pb-2">
+                      <li>
+                        <Button
+                          variant="text"
+                          onClick={() => navigate("/profile")}
+                        >
+                          Profile
+                        </Button>
+                      </li>
+                      <li>
+                        <Button variant="text" onClick={handleLogout}>
+                          Logout
+                        </Button>
+                      </li>
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
+            <NavigationMenu>
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <NavigationMenuLink href="/cart">
+                    <Button variant="outline">Cart</Button>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
+          </>
         )}
 
         <div className="relative rounded-xl">
@@ -166,6 +204,9 @@ export const Navbar = () => {
                   type="text"
                   placeholder="search..."
                   className="rounded-full w-auto h-9 outline-none"
+                  value={data}
+                  onChange={(e) => setData(e.target.value)}
+                  onKeyPress={handleKeyPress}
                 />
               </div>
             </motion.div>

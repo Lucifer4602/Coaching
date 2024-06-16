@@ -4,6 +4,7 @@ const user = require("../models/user");
 const { uploader } = require("../utils/imageUploader");
 const Section = require("../models/section");
 const Subsection = require("../models/subsection");
+const mongoose = require("mongoose");
 
 exports.createCourse = async (req, res) => {
   try {
@@ -273,6 +274,47 @@ exports.deleteCourse = async (req, res) => {
       message: "Unable to delete course",
       error: error.message,
     });
+  }
+};
+
+exports.searchCourses = async (req, res) => {
+  const { q } = req.query;
+
+  try {
+    const courses = await course
+      .find({
+        $or: [
+          { courseName: { $regex: new RegExp(q), $options: "i" } },
+          {
+            tag: {
+              $in: await Tag.find({
+                name: { $regex: new RegExp(q), $options: "i" },
+              }).select("_id"),
+            },
+          },
+          {
+            instructor: {
+              $in: await user.find({
+                firstName: { $regex: new RegExp(q), $options: "i" },
+              }),
+            },
+          },
+          {
+            instructor: {
+              $in: await user.find({
+                lastName: { $regex: new RegExp(q), $options: "i" },
+              }),
+            },
+          },
+        ],
+      })
+      .populate("tag")
+      .populate("instructor")
+      .populate({ path: "courseContent", populate: "subsection" });
+    res.status(200).json({ data: courses });
+  } catch (error) {
+    console.error("Error searching courses:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 

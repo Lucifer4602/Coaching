@@ -7,6 +7,7 @@ const {
   getCourse,
   getInstructorCourses,
   deleteCourse,
+  searchCourses,
 } = require("../controllers/course");
 
 const {
@@ -53,6 +54,8 @@ router.get("/getCourse", getCourse); // done
 router.post("/editCourse", auth, isInstructor, editCourse); //done
 router.get("/getInstructorCourses", auth, isInstructor, getInstructorCourses); //done
 router.delete("/deleteCourse", deleteCourse); //done
+
+router.get("/search", searchCourses);
 
 router.post("/updateCourseProgress", auth, isStudent, updateCourseProgress);
 

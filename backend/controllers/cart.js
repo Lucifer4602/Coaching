@@ -1,7 +1,7 @@
 const User = require("../models/user");
 
 const addToWishlist = async (req, res) => {
-  const { userId, courseId } = req.query;
+  const { userId, courseId } = req.body;
 
   try {
     const updatedUser = await User.findByIdAndUpdate(
@@ -41,7 +41,7 @@ const removeFromWishlist = async (req, res) => {
 };
 
 const addToCart = async (req, res) => {
-  const { userId, courseId } = req.query;
+  const { userId, courseId } = req.body;
 
   try {
     const updatedUser = await User.findByIdAndUpdate(
@@ -80,9 +80,45 @@ const removeFromCart = async (req, res) => {
   }
 };
 
+const checkWishlistStatus = async (req, res) => {
+  const { userId, courseId } = req.query;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const isInWishlist = user.wishlist.some((item) => item.equals(courseId));
+    res.status(200).json({ isInWishlist });
+  } catch (error) {
+    console.error("Error checking wishlist status:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+const checkCartStatus = async (req, res) => {
+  const { userId, courseId } = req.query;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const isInCart = user.cart.some((item) => item.equals(courseId));
+    res.status(200).json({ isInCart });
+  } catch (error) {
+    console.error("Error checking cart status:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
 module.exports = {
   addToWishlist,
   removeFromWishlist,
   addToCart,
   removeFromCart,
+  checkWishlistStatus,
+  checkCartStatus,
 };

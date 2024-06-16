@@ -19,6 +19,7 @@ const initialState = {
     courses: [],
     c_id: "",
     hello: "false",
+    query: "",
   },
 };
 

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 export const Card1 = ({ tag, value }) => {
+  const select = useSelector((state) => state?.form?.FormData);
   const form = useSelector((state) => state?.form?.FormData?.courses);
 
   // console.log(tag);
@@ -29,7 +30,7 @@ export const Card1 = ({ tag, value }) => {
             key={Item._id}
             className="m-4  w-72 h-72"
             onClick={() => {
-              dispatch(update({ ...form, c_id: Item._id }));
+              dispatch(update({ ...select, c_id: Item._id }));
               navigate("/CourseDetails");
             }}
           >

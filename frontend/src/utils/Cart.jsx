@@ -7,11 +7,11 @@ import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
 
-export const Wishlist = () => {
+export const Cart = () => {
   const select = useSelector((state) => state?.form?.FormData);
   const authToken = select?.authToken;
 
-  const [wishlist, setWishlist] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export const Wishlist = () => {
             },
           }
         );
-        setWishlist(response.data.data.wishlist);
+        setCartItems(response.data.data.cart);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching user details:", error);
@@ -39,10 +39,10 @@ export const Wishlist = () => {
     }
   }, [select?._id, authToken]);
 
-  const handleRemoveFromWishlist = async (itemId) => {
+  const handleRemoveFromCart = async (itemId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3000/api/v1/cart/removeWishlist`,
+        `http://localhost:3000/api/v1/cart/removeCart`,
         {
           params: { userId: select?._id, courseId: itemId },
           headers: {
@@ -52,18 +52,22 @@ export const Wishlist = () => {
         }
       );
       if (response.status === 200) {
-        const updatedWishlist = wishlist.filter((item) => item._id !== itemId);
-        setWishlist(updatedWishlist);
+        const updatedCartItems = cartItems.filter(
+          (item) => item._id !== itemId
+        );
+        setCartItems(updatedCartItems);
       }
     } catch (error) {
-      console.error("Error removing from wishlist:", error);
+      console.error("Error removing from cart:", error);
     }
   };
 
-  const handleAddToCart = async (itemId) => {
+  const handleMoveToWishlist = async (itemId) => {
     try {
+      await handleRemoveFromCart(itemId);
+
       const response = await axios.post(
-        `http://localhost:3000/api/v1/cart/addCart`,
+        `http://localhost:3000/api/v1/cart/addWishlist`,
         {
           userId: select?._id,
           courseId: itemId,
@@ -76,30 +80,14 @@ export const Wishlist = () => {
         }
       );
       if (response.status === 200) {
-        console.log("Item added to cart");
-        await handleRemoveFromWishlist(itemId);
+        console.log("Item moved to wishlist");
       }
     } catch (error) {
-      console.error("Error adding to cart:", error);
+      console.error("Error moving to wishlist:", error);
     }
   };
 
-  const handleAddAllToCart = async () => {
-    try {
-      const itemIds = wishlist.map((item) => item._id);
-
-      for (const itemId of itemIds) {
-        await handleAddToCart(itemId);
-        await handleRemoveFromWishlist(itemId);
-      }
-
-      setWishlist([]);
-    } catch (error) {
-      console.error("Error adding all to cart:", error);
-    }
-  };
-
-  const totalAmount = wishlist.reduce(
+  const totalAmount = cartItems.reduce(
     (total, item) => total + parseInt(item.price),
     0
   );
@@ -113,12 +101,12 @@ export const Wishlist = () => {
         <div className="flex-1 bg-slate-900 overflow-hidden">
           <ScrollArea className="h-full overflow-y-auto">
             <div className="p-4">
-              <div className="text-white text-lg mb-4">Your Wishlist</div>
+              <div className="text-white text-lg mb-4">Your Cart</div>
               {loading ? (
                 <div className="text-white">Loading...</div>
-              ) : wishlist.length > 0 ? (
+              ) : cartItems.length > 0 ? (
                 <div className="grid grid-cols-1 gap-4">
-                  {wishlist.map((item) => (
+                  {cartItems.map((item) => (
                     <div
                       key={item._id}
                       className="bg-white p-4 rounded-lg shadow-md"
@@ -141,38 +129,30 @@ export const Wishlist = () => {
                       <div className="flex justify-end mt-4">
                         <Button
                           className="px-4 py-2 bg-blue-500 text-white rounded-md mr-2"
-                          onClick={() => handleAddToCart(item._id)}
+                          onClick={() => handleMoveToWishlist(item._id)}
                         >
-                          Add to Cart
+                          Save for Later
                         </Button>
                         <Button
                           className="px-4 py-2 bg-red-500 text-white rounded-md"
-                          onClick={() => handleRemoveFromWishlist(item._id)}
+                          onClick={() => handleRemoveFromCart(item._id)}
                         >
-                          Remove from Wishlist
+                          Remove from Cart
                         </Button>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="text-white">
-                  No courses found in your wishlist.
-                </div>
+                <div className="text-white">Your cart is empty.</div>
               )}
 
-              {/* Display total amount and Add All to Cart button */}
-              {wishlist.length > 0 && (
+              {/* Display total amount */}
+              {cartItems.length > 0 && (
                 <div className="mt-8">
                   <div className="text-white font-semibold">
                     Total Amount: ₹{totalAmount}
                   </div>
-                  <Button
-                    className="mt-4 px-4 py-2 bg-green-500 text-white rounded-md"
-                    onClick={handleAddAllToCart}
-                  >
-                    Add All to Cart
-                  </Button>
                 </div>
               )}
             </div>

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import { IoClose } from "react-icons/io5";
 import { motion } from "framer-motion";
 import {
@@ -19,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
   const select = useSelector((state) => state?.form?.FormData);
+  const role = select.role;
   const [isClicked, setClick] = useState(false);
   const auth = select?.auth === "true";
   const handleSearchClick = () => {
@@ -45,7 +45,7 @@ export const Navbar = () => {
   }, []);
 
   return (
-    <div className="flex flex-row justify-evenly bg-zinc-500 p-3 flex-wrap sticky">
+    <div className="flex flex-row justify-evenly bg-zinc-500 p-3 flex-wrap sticky z-50">
       <div className="flex flex-row gap-1">
         <img
           src="https://th.bing.com/th/id/OIP.31Ucf--dxHuaCmG0XOebtwHaE7?w=268&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7"
@@ -117,31 +117,41 @@ export const Navbar = () => {
       </div>
 
       <div className="flex flex-row gap-2">
-        <>
-          {!auth ? ( // Change to !auth to show Sign In and Sign Up when not authenticated
-            <>
-              <NavigationMenu>
-                <NavigationMenuList>
-                  <NavigationMenuItem>
-                    <NavigationMenuLink href="/login">
-                      <Button variant="outline">Sign In</Button>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-                </NavigationMenuList>
-              </NavigationMenu>
+        {!auth ? (
+          <>
+            <NavigationMenu>
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <NavigationMenuLink href="/login">
+                    <Button variant="outline">Sign In</Button>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
 
-              <NavigationMenu>
-                <NavigationMenuList>
-                  <NavigationMenuItem>
-                    <NavigationMenuLink href="/signUp">
-                      <Button variant="outline">Sign Up</Button>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-                </NavigationMenuList>
-              </NavigationMenu>
-            </>
-          ) : null}
-        </>
+            <NavigationMenu>
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <NavigationMenuLink href="/signUp">
+                    <Button variant="outline">Sign Up</Button>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
+          </>
+        ) : null}
+
+        {role === "student" && (
+          <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuLink href="/cart">
+                  <Button variant="outline">Cart</Button>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+        )}
 
         <div className="relative rounded-xl">
           {isClicked && (

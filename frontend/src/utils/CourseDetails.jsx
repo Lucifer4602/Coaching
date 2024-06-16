@@ -10,13 +10,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { update } from "@/redux/FormSlice";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 export const CourseDetails = () => {
   const form = useSelector((state) => state?.form?.FormData);
+  const userId = useSelector((state) => state?.form?.FormData?._id);
   const id = useSelector((state) => state?.form?.FormData?.c_id);
   const authToken = useSelector((state) => state?.form?.FormData?.authToken);
   const [courseDetails, setCourseDetails] = useState(null);
   const [sum, setSum] = useState(0);
+  const [wish, setWish] = useState(false);
+  const [inCart, setInCart] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -43,7 +47,9 @@ export const CourseDetails = () => {
         );
         setSum(subsectionSum);
 
-        // console.log(fetchedCourseDetails);
+        // Check wishlist and cart status
+        checkWishlistStatus();
+        checkCartStatus();
       } catch (error) {
         console.error("Error fetching course details:", error);
       }
@@ -54,13 +60,137 @@ export const CourseDetails = () => {
     }
   }, [id, authToken]);
 
+  useEffect(() => {
+    // Update wish and inCart states when userId, id, or authToken changes
+    if (userId && id && authToken) {
+      checkWishlistStatus();
+      checkCartStatus();
+    }
+  }, [userId, id, authToken]);
+
   const formatTimestamp = (timestamp) => {
     const date = new Date(timestamp);
     return date.toLocaleString();
   };
 
+  const checkWishlistStatus = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/api/v1/cart/checkWishlistStatus`,
+        {
+          params: { userId, courseId: id },
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setWish(response.data.isInWishlist);
+    } catch (error) {
+      console.error("Error checking wishlist status:", error);
+    }
+  };
+
+  const checkCartStatus = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/api/v1/cart/checkCartStatus`,
+        {
+          params: { userId, courseId: id },
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setInCart(response.data.isInCart);
+    } catch (error) {
+      console.error("Error checking cart status:", error);
+    }
+  };
+
+  const wishlistHandler = async () => {
+    try {
+      if (wish) {
+        console.log("Removing from wishlist");
+        await axios.delete(`http://localhost:3000/api/v1/cart/removeWishlist`, {
+          params: {
+            userId: userId,
+            courseId: id,
+          },
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+        setWish(false);
+      } else {
+        console.log("Adding to wishlist");
+        await axios.post(
+          `http://localhost:3000/api/v1/cart/addWishlist`,
+          {
+            userId: userId,
+            courseId: id,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        setWish(true);
+      }
+    } catch (error) {
+      console.error(
+        "Error handling wishlist:",
+        error.response?.data || error.message
+      );
+    }
+  };
+
+  const cartHandler = async () => {
+    try {
+      if (inCart) {
+        console.log("Removing from cart");
+        await axios.delete(`http://localhost:3000/api/v1/cart/removeCart`, {
+          params: {
+            userId: userId,
+            courseId: id,
+          },
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+        setInCart(false);
+      } else {
+        console.log("Adding to cart");
+        await axios.post(
+          `http://localhost:3000/api/v1/cart/addCart`,
+          {
+            userId: userId,
+            courseId: id,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        setInCart(true);
+      }
+    } catch (error) {
+      console.error(
+        "Error handling cart:",
+        error.response?.data || error.message
+      );
+    }
+  };
+
   const courses = courseDetails?.instructor?.courses.filter(
-    (item) => item._id != id
+    (item) => item._id !== id
   );
 
   return (
@@ -112,7 +242,10 @@ export const CourseDetails = () => {
 
           <div>
             <Avatar>
-              <AvatarImage src={courseDetails.instructor.image} alt="@" />
+              <AvatarImage
+                src={courseDetails.instructor.image}
+                alt="Instructor"
+              />
             </Avatar>
             <span>
               {courseDetails.instructor?.firstName +
@@ -125,7 +258,7 @@ export const CourseDetails = () => {
 
           <div>
             <div>Review From Students</div>
-            {courseDetails.ratingAndReview.length == 0 ? (
+            {courseDetails.ratingAndReview.length === 0 ? (
               <>No Ratings Till now</>
             ) : (
               <>need to do work</>
@@ -171,6 +304,15 @@ export const CourseDetails = () => {
                 <div>No courses found</div>
               )}
             </div>
+          </div>
+
+          <div>
+            <Button variant="outline" onClick={cartHandler}>
+              {inCart ? "Remove from Cart" : "Add to Cart"}
+            </Button>
+            <Button variant="outline" onClick={wishlistHandler}>
+              {wish ? "Remove from Wishlist" : "Add to Wishlist"}
+            </Button>
           </div>
         </>
       ) : (

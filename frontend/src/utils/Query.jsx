@@ -1,14 +1,14 @@
 import React from "react";
 import { Navbar } from "./Navbar";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import { Card1 } from "./ProfileComp/Card1";
 
 export const Query = () => {
   const query = window.location.pathname;
   const x = query.slice(1, query.length);
   const y = x.replace("%20", " ");
-  const form = useSelector((state) => state?.form?.FormData?.courses);
-  //   console.log(form);
+  // const form = useSelector((state) => state?.form?.FormData);
+  // console.log(form);
   return (
     <div>
       <Navbar></Navbar>

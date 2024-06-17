@@ -36,6 +36,7 @@ export const Navbar = () => {
         );
 
         const x = response.data.data;
+        // console.log(x);
         dispatch(update({ ...select, courses: x }));
       } catch (er) {
         console.log(er);

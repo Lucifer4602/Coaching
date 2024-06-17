@@ -20,6 +20,7 @@ const initialState = {
     c_id: "",
     hello: "false",
     query: "",
+    enrolled: {},
   },
 };
 

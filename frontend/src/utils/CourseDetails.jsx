@@ -40,14 +40,12 @@ export const CourseDetails = () => {
         const fetchedCourseDetails = response.data.data.courseDetails;
         setCourseDetails(fetchedCourseDetails);
 
-        // Calculate the sum of all subsections
         const subsectionSum = fetchedCourseDetails.courseContent.reduce(
           (total, item) => total + item.subsection.length,
           0
         );
         setSum(subsectionSum);
 
-        // Check wishlist and cart status
         checkWishlistStatus();
         checkCartStatus();
       } catch (error) {
@@ -61,7 +59,6 @@ export const CourseDetails = () => {
   }, [id, authToken]);
 
   useEffect(() => {
-    // Update wish and inCart states when userId, id, or authToken changes
     if (userId && id && authToken) {
       checkWishlistStatus();
       checkCartStatus();
@@ -189,6 +186,30 @@ export const CourseDetails = () => {
     }
   };
 
+  const courseHandler = async () => {
+    try {
+      const response = await axios.post(
+        `http://localhost:3000/api/v1/cart/addEnrolled`,
+        {
+          userId: userId,
+          courseId: id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  const name =
+    courseDetails?.instructor?.firstName +
+    " " +
+    courseDetails?.instructor?.lastName;
   const courses = courseDetails?.instructor?.courses.filter(
     (item) => item._id !== id
   );
@@ -208,9 +229,11 @@ export const CourseDetails = () => {
           </div>
           <div>
             {"Created By : " +
-              courseDetails.instructor?.firstName +
-              " " +
-              courseDetails.instructor?.lastName}
+              (courseDetails.instructor
+                ? courseDetails.instructor.firstName +
+                  " " +
+                  courseDetails.instructor.lastName
+                : "Instructor not available")}
           </div>
           <div>Created At: {formatTimestamp(courseDetails.createdAt)}</div>
           <div>What You Will Learn</div>
@@ -243,14 +266,16 @@ export const CourseDetails = () => {
           <div>
             <Avatar>
               <AvatarImage
-                src={courseDetails.instructor.image}
+                src={courseDetails.instructor?.image}
                 alt="Instructor"
               />
             </Avatar>
             <span>
-              {courseDetails.instructor?.firstName +
-                " " +
-                courseDetails.instructor?.lastName}
+              {courseDetails.instructor
+                ? courseDetails.instructor.firstName +
+                  " " +
+                  courseDetails.instructor.lastName
+                : "Instructor not available"}
             </span>
           </div>
 
@@ -268,9 +293,11 @@ export const CourseDetails = () => {
           <div>
             <div>
               {"More Courses by " +
-                courseDetails.instructor?.firstName +
-                " " +
-                courseDetails.instructor?.lastName}
+                (courseDetails.instructor
+                  ? courseDetails.instructor.firstName +
+                    " " +
+                    courseDetails.instructor.lastName
+                  : "Instructor not available")}
             </div>
             <div>
               {courses ? (
@@ -291,11 +318,7 @@ export const CourseDetails = () => {
                       />
                     </div>
                     <div>{Item.courseName}</div>
-                    <div>
-                      {Item.instructor.firstName +
-                        " " +
-                        Item.instructor.lastName}
-                    </div>
+                    <div>{name}</div>
                     <div>{Item.ratingAndReview.length + " Ratings"}</div>
                     <div>{Item.price}</div>
                   </button>
@@ -312,6 +335,12 @@ export const CourseDetails = () => {
             </Button>
             <Button variant="outline" onClick={wishlistHandler}>
               {wish ? "Remove from Wishlist" : "Add to Wishlist"}
+            </Button>
+          </div>
+
+          <div>
+            <Button variant="outline" onClick={courseHandler}>
+              Buy
             </Button>
           </div>
         </>

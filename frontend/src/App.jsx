@@ -18,6 +18,7 @@ import { EnrolledCourses } from "./utils/EnrolledCourses.jsx";
 import { Wishlist } from "./utils/Wishlist.jsx";
 import { Cart } from "./utils/Cart.jsx";
 import { Search } from "./utils/Search.jsx";
+import { ViewCourse } from "./utils/ViewCourse.jsx";
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
         ></Route>
         <Route path="/cart" element={<Cart></Cart>}></Route>
         <Route path="/search" element={<Search></Search>}></Route>
+        <Route path="view-course" element={<ViewCourse></ViewCourse>}></Route>
       </Routes>
     </Router>
   );

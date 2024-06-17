@@ -103,6 +103,15 @@ exports.getAllUserDetails = async (req, res) => {
       .populate("additional")
       .populate("wishlist")
       .populate("cart")
+      .populate({
+        path: "courses",
+        populate: {
+          path: "courseContent",
+          populate: {
+            path: "subsection",
+          },
+        },
+      })
       .exec();
     res.status(200).json({
       success: true,

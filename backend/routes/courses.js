@@ -55,11 +55,11 @@ router.post("/editCourse", auth, isInstructor, editCourse); //done
 router.get("/getInstructorCourses", auth, isInstructor, getInstructorCourses); //done
 router.delete("/deleteCourse", deleteCourse); //done
 
-router.get("/search", searchCourses);
+router.get("/search", searchCourses); //done
 
 router.post("/updateCourseProgress", auth, isStudent, updateCourseProgress);
 
-router.post("/createRating", auth, isStudent, createRating);
+router.post("/createRating", createRating);
 router.get("/getAverageRating", getAvgRating);
 router.get("/getReviews", totalRating);
 

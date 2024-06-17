@@ -1,12 +1,12 @@
 const ratingAndReview = require("../models/ratingandreview");
-const user = require("../models/user");
+const User = require("../models/user");
 const course = require("../models/course");
 const mongo = require("mongoose");
 
 exports.createRating = async (req, res) => {
   try {
-    const userId = req.user.id;
-    const { rating, review, courseId } = req.body;
+    // const userId = req.user.id;
+    const { rating, review, courseId, userId } = req.body;
 
     const courseDetails = await course.findOne({
       _id: courseId,
@@ -41,7 +41,7 @@ exports.createRating = async (req, res) => {
 
     const ratingReview = await ratingAndReview.create(newRating);
 
-    await course.findByIdAndDelete(
+    await course.findByIdAndUpdate(
       courseId,
       { $push: { ratingAndReview: ratingReview._id } },
       { new: true }

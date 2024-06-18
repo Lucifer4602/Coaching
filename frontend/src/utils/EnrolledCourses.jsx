@@ -49,48 +49,55 @@ export const EnrolledCourses = () => {
 
     sections.forEach((section) => {
       section.subsection.forEach((sub) => {
-        // console.log(sub);
         totalDuration += parseInt(sub.duration);
       });
     });
-    return {
-      totalDuration: totalDuration,
-    };
+    return totalDuration;
   };
 
-  const handler = (e) => {
-    dispatch(update({ ...select, enrolled: e }));
+  const handler = (item) => {
+    dispatch(update({ ...select, enrolled: item }));
     navigate("/view-course");
   };
 
   return (
-    <div>
+    <div className="flex flex-col h-screen">
       <Navbar />
       <Separator className="bg-slate-900" />
-      <div className="flex flex-row h-screen">
+      <div className="flex flex-row flex-grow overflow-hidden">
         <Pnav />
-        <div className="w-[80%] bg-slate-900">
-          <ScrollArea className="h-[100%] w-[70%] mx-auto">
-            <div>EnrolledCourses</div>
-            {enrolled.map((item) => {
-              const { totalDuration } = calculateTotalDuration(
-                item.courseContent
-              );
-              return (
+        <div className="flex-grow bg-slate-900">
+          <ScrollArea className="h-full w-full overflow-auto p-6">
+            <div className="text-white text-2xl mb-6">Enrolled Courses</div>
+            {enrolled.map((item, index) => (
+              <div
+                key={index}
+                className="mb-6 max-w-xl mx-auto bg-gray-800 rounded-lg shadow-md transition-transform transform hover:scale-105 hover:shadow-lg"
+              >
                 <Button
                   variant="outline"
-                  className="h-28 w-auto"
+                  className="flex items-start w-full p-4 bg-transparent border-none cursor-pointer h-full"
                   onClick={() => handler(item)}
                 >
-                  <div>
-                    <img src={item.thumbnail}></img>
+                  <img
+                    src={item.thumbnail}
+                    alt={item.courseName}
+                    className="w-24 h-24 object-cover rounded-lg mr-4"
+                  />
+                  <div className="flex-1">
+                    <div className="text-xl font-bold mb-1 text-white">
+                      {item.courseName}
+                    </div>
+                    <div className="mb-2 text-white">
+                      {item.courseDescription}
+                    </div>
+                    <div className="text-sm text-gray-400">
+                      {calculateTotalDuration(item.courseContent)} seconds
+                    </div>
                   </div>
-                  <div>{item.courseName}</div>
-                  <div>{item.courseDescription}</div>
-                  <div>{totalDuration + " seconds"}</div>
                 </Button>
-              );
-            })}
+              </div>
+            ))}
           </ScrollArea>
         </div>
       </div>

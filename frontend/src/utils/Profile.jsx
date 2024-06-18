@@ -4,11 +4,12 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Pcomp } from "./ProfileComp/Pcomp.jsx";
-import { Pcomp1 } from "./ProfileComp/Pcomp1.jsx";
-import { Pnav } from "./ProfileComp/Pnav.jsx";
-import { Pcomp2 } from "./ProfileComp/Pcomp2.jsx";
+import { Pcomp } from "./ProfileComp/Pcomp";
+import { Pcomp1 } from "./ProfileComp/Pcomp1";
+import { Pcomp2 } from "./ProfileComp/Pcomp2";
+import { Pnav } from "./ProfileComp/Pnav";
 import { update } from "@/redux/FormSlice";
+import { toast } from "react-toastify";
 
 export const Profile = () => {
   const [loading, setLoading] = useState(true);
@@ -40,6 +41,7 @@ export const Profile = () => {
       } catch (error) {
         console.error("Error fetching user details:", error);
         setLoading(false);
+        toast.error("Failed to fetch user details. Please try again.");
       }
     };
 
@@ -47,23 +49,25 @@ export const Profile = () => {
   }, [select?._id, authToken, dispatch, select?.hello]);
 
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
       <Navbar />
       <Separator className="bg-slate-900" />
-      <div className="flex flex-row h-screen">
+      <div className="flex flex-1">
         <Pnav />
-        <div className="w-[80%] bg-slate-900">
-          <ScrollArea className="h-[100%] w-[70%] mx-auto">
+        <div className="flex-1 bg-slate-900 p-4 overflow-auto">
+          <ScrollArea className="flex flex-col gap-5 items-center">
             {loading ? (
-              <div className="flex flex-col gap-5">
-                <p>Loading...</p>
-              </div>
+              <p className="text-white text-lg">Loading...</p>
             ) : (
-              <div className="flex flex-col gap-5">
+              <>
+                <div className="mt-8"></div>
                 <Pcomp />
+                <div className="mt-8"></div>
                 <Pcomp1 />
+                <div className="mt-8"></div>
                 <Pcomp2 />
-              </div>
+                <div className="mt-8"></div>
+              </>
             )}
           </ScrollArea>
         </div>

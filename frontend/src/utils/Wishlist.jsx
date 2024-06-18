@@ -6,6 +6,8 @@ import { Pnav } from "./ProfileComp/Pnav";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const Wishlist = () => {
   const select = useSelector((state) => state?.form?.FormData);
@@ -54,9 +56,11 @@ export const Wishlist = () => {
       if (response.status === 200) {
         const updatedWishlist = wishlist.filter((item) => item._id !== itemId);
         setWishlist(updatedWishlist);
+        toast.success("Item removed from wishlist successfully");
       }
     } catch (error) {
       console.error("Error removing from wishlist:", error);
+      toast.error("Failed to remove item from wishlist");
     }
   };
 
@@ -78,9 +82,11 @@ export const Wishlist = () => {
       if (response.status === 200) {
         console.log("Item added to cart");
         await handleRemoveFromWishlist(itemId);
+        toast.success("Item added to cart successfully");
       }
     } catch (error) {
       console.error("Error adding to cart:", error);
+      toast.error("Failed to add item to cart");
     }
   };
 
@@ -90,12 +96,13 @@ export const Wishlist = () => {
 
       for (const itemId of itemIds) {
         await handleAddToCart(itemId);
-        await handleRemoveFromWishlist(itemId);
       }
 
       setWishlist([]);
+      toast.success("All items added to cart successfully");
     } catch (error) {
       console.error("Error adding all to cart:", error);
+      toast.error("Failed to add all items to cart");
     }
   };
 
@@ -117,7 +124,7 @@ export const Wishlist = () => {
               {loading ? (
                 <div className="text-white">Loading...</div>
               ) : wishlist.length > 0 ? (
-                <div className="grid grid-cols-1 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                   {wishlist.map((item) => (
                     <div
                       key={item._id}
@@ -138,7 +145,7 @@ export const Wishlist = () => {
                         {item.ratingAndReview.length} Ratings
                       </div>
                       <div className="font-semibold mt-2">₹{item.price}</div>
-                      <div className="flex justify-end mt-4">
+                      <div className="flex flex-col justify-end gap-3">
                         <Button
                           className="px-4 py-2 bg-blue-500 text-white rounded-md mr-2"
                           onClick={() => handleAddToCart(item._id)}

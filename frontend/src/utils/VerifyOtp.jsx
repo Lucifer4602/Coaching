@@ -17,79 +17,103 @@ export const VerifyOtp = () => {
   const formData = useSelector((state) => state?.form?.FormData);
   const [otp, setOtp] = useState("");
   const dispatch = useDispatch();
+  const [toastMessage, setToastMessage] = useState("");
+
+  const showToast = (message) => {
+    setToastMessage(message);
+    setTimeout(() => {
+      setToastMessage("");
+    }, 3000); // Clear message after 3 seconds
+  };
 
   const submitHandler = async () => {
     const updatedForm = { ...formData, otp: otp };
-    console.log(updatedForm);
     try {
       await axios.post("http://localhost:3000/api/v1/auth/signup", updatedForm);
       dispatch(update(updatedForm));
       navigate("/login");
     } catch (error) {
       console.error(error);
+      showToast("Failed to verify OTP. Please try again.");
+    }
+  };
+
+  const resendOTP = async () => {
+    try {
+      await axios.post("http://localhost:3000/api/v1/auth/sendotp", formData);
+      showToast("OTP resent successfully.");
+    } catch (error) {
+      console.error(error);
+      showToast("Failed to resend OTP. Please try again.");
     }
   };
 
   return (
-    <div className="bg-gray-800 w-screen h-screen">
+    <div className="bg-gradient-to-b from-blue-400 to-purple-500 min-h-screen">
       <Navbar />
-      <div className="flex flex-col justify-center items-start mt-36 gap-4 ml-[40%]">
-        <div className="font-bold text-4xl text-white w-full">Verify Email</div>
-        <div className="text-blue-300 font-mono font-semibold">
-          A verification code has been sent to you. Enter the <br />
-          code below
-        </div>
-        <div className="h-[100%] w-[100%] text-white pl-[11%] pt-[5%]">
-          <InputOTP
-            maxLength={6}
-            value={otp}
-            onChange={(value) => {
-              setOtp(value);
-            }}
-          >
-            <InputOTPGroup>
-              <InputOTPSlot index={0} />
-              <InputOTPSlot index={1} />
-              <InputOTPSlot index={2} />
-            </InputOTPGroup>
-            <InputOTPSeparator />
-            <InputOTPGroup>
-              <InputOTPSlot index={3} />
-              <InputOTPSlot index={4} />
-              <InputOTPSlot index={5} />
-            </InputOTPGroup>
-          </InputOTP>
-        </div>
+      <div className="bg-gradient-to-b from-blue-400 to-purple-500 min-h-screen flex flex-col justify-center items-center">
+        <div className="flex flex-col justify-center items-center mt-10 md:mt-24 gap-4">
+          <div className="font-bold text-4xl text-white">Verify Email</div>
+          <div className="text-blue-300 font-mono font-semibold text-center">
+            A verification code has been sent to you. Enter the code below
+          </div>
+          <div className="mt-6 w-full max-w-xs md:max-w-md">
+            <div className="flex justify-center">
+              <InputOTP
+                maxLength={6}
+                value={otp}
+                onChange={(value) => {
+                  setOtp(value);
+                }}
+                className="w-full max-w-xs md:max-w-md"
+              >
+                <InputOTPGroup>
+                  <InputOTPSlot index={0} />
+                  <InputOTPSlot index={1} />
+                  <InputOTPSlot index={2} />
+                </InputOTPGroup>
+                <InputOTPSeparator />
+                <InputOTPGroup>
+                  <InputOTPSlot index={3} />
+                  <InputOTPSlot index={4} />
+                  <InputOTPSlot index={5} />
+                </InputOTPGroup>
+              </InputOTP>
+            </div>
+          </div>
 
-        <Button variant="outline" className="ml-[18%]" onClick={submitHandler}>
-          Verify Email
-        </Button>
-        <div className="flex flex-row justify-evenly gap-64 mt-[1%]">
           <Button
-            variant="ghost"
-            className="text-white"
-            onClick={() => {
-              navigate("/signUp");
-            }}
+            variant="outline"
+            className="mt-6 md:mt-8"
+            onClick={submitHandler}
           >
-            Back to Login
+            Verify Email
           </Button>
-          <Button
-            variant="ghost"
-            className="text-blue-200"
-            onClick={async () => {
-              try {
-                await axios.post(
-                  "http://localhost:3000/api/v1/auth/sendotp",
-                  formData
-                );
-              } catch (error) {
-                console.error(error);
-              }
-            }}
-          >
-            Resend
-          </Button>
+          <div className="flex flex-col md:flex-row justify-center gap-4 mt-4">
+            <Button
+              variant="ghost"
+              className="text-white"
+              onClick={() => {
+                navigate("/signup");
+              }}
+            >
+              Back to Signup
+            </Button>
+            <Button
+              variant="ghost"
+              className="text-blue-200"
+              onClick={resendOTP}
+            >
+              Resend
+            </Button>
+          </div>
+
+          {/* Toast Message */}
+          {toastMessage && (
+            <div className="fixed bottom-4 right-4 bg-white p-2 rounded shadow-lg">
+              {toastMessage}
+            </div>
+          )}
         </div>
       </div>
     </div>

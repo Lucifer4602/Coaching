@@ -6,6 +6,7 @@ import { Input } from "../../components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export const Scomp1 = () => {
   const select = useSelector((state) => state?.form?.FormData);
@@ -65,24 +66,32 @@ export const Scomp1 = () => {
           hello: true,
         })
       );
+      toast.success("Profile updated successfully");
       navigate("/profile");
     } catch (error) {
       console.error(error);
+      toast.error("Failed to update profile");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col gap-6 justify-around">
-      <form onSubmit={submitHandler}>
-        <Card>
-          <div className="my-10"></div>
-          <div className="flex flex-row">
-            <CardContent>Personal Information</CardContent>
-            <div>
-              <CardContent>
-                <label htmlFor="firstName">First Name</label>
+    <div className="flex flex-col gap-6 justify-around items-center px-4 lg:px-8 xl:px-12">
+      <form
+        onSubmit={submitHandler}
+        className="w-full lg:w-[calc(100% - 40px)] xl:w-[calc(100% - 80px)]"
+      >
+        <Card className="w-full lg:w-[calc(100% - 40px)] xl:w-[calc(100% - 80px)]">
+          <CardContent>
+            <div className="font-bold text-2xl mb-6">
+              Edit Profile Information
+            </div>
+            <div className="flex flex-row justify-evenly">
+              <div className="flex flex-col gap-4">
+                <label htmlFor="firstName" className="font-bold">
+                  First Name
+                </label>
                 <Input
                   type="text"
                   placeholder="First Name"
@@ -91,33 +100,9 @@ export const Scomp1 = () => {
                   value={data.firstName}
                   onChange={handler}
                 />
-              </CardContent>
-              <CardContent>
-                <label htmlFor="dob">Date of Birth</label>
-                <Input
-                  type="date"
-                  placeholder="Date of Birth"
-                  id="dob"
-                  name="dob"
-                  value={data.dob}
-                  onChange={handler}
-                />
-              </CardContent>
-              <CardContent>
-                <label htmlFor="phoneNumber">Phone Number</label>
-                <Input
-                  type="text"
-                  placeholder="Phone Number"
-                  id="phoneNumber"
-                  name="phoneNumber"
-                  value={data.phoneNumber}
-                  onChange={handler}
-                />
-              </CardContent>
-            </div>
-            <div>
-              <CardContent>
-                <label htmlFor="lastName">Last Name</label>
+                <label htmlFor="lastName" className="font-bold">
+                  Last Name
+                </label>
                 <Input
                   type="text"
                   placeholder="Last Name"
@@ -126,9 +111,33 @@ export const Scomp1 = () => {
                   value={data.lastName}
                   onChange={handler}
                 />
-              </CardContent>
-              <CardContent>
-                <label htmlFor="gender">Gender</label>
+                <label htmlFor="dob" className="font-bold">
+                  Date of Birth
+                </label>
+                <Input
+                  type="date"
+                  placeholder="Date of Birth"
+                  id="dob"
+                  name="dob"
+                  value={data.dob}
+                  onChange={handler}
+                />
+              </div>
+              <div className="flex flex-col gap-4">
+                <label htmlFor="phoneNumber" className="font-bold">
+                  Phone Number
+                </label>
+                <Input
+                  type="text"
+                  placeholder="Phone Number"
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  value={data.phoneNumber}
+                  onChange={handler}
+                />
+                <label htmlFor="gender" className="font-bold">
+                  Gender
+                </label>
                 <Input
                   type="text"
                   placeholder="Gender"
@@ -137,9 +146,9 @@ export const Scomp1 = () => {
                   value={data.gender}
                   onChange={handler}
                 />
-              </CardContent>
-              <CardContent>
-                <label htmlFor="about">About</label>
+                <label htmlFor="about" className="font-bold">
+                  About
+                </label>
                 <Input
                   type="text"
                   placeholder="About"
@@ -148,13 +157,15 @@ export const Scomp1 = () => {
                   value={data.about}
                   onChange={handler}
                 />
-              </CardContent>
+              </div>
             </div>
-          </div>
+          </CardContent>
+          <CardContent className="flex justify-end">
+            <Button variant="ghost" type="submit" disabled={loading}>
+              {loading ? "Saving..." : "Save"}
+            </Button>
+          </CardContent>
         </Card>
-        <Button variant="ghost" type="submit" disabled={loading}>
-          {loading ? "Saving..." : "Save"}
-        </Button>
       </form>
     </div>
   );

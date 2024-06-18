@@ -1,6 +1,6 @@
-const razorpay=require('razorpay')
+const razorpay = require("razorpay");
 
-exports.payments=new razorpay({
-    key_id:"joker",
-    key_secret:"0"
-})
+exports.payments = new razorpay({
+  key_id: "joker",
+  key_secret: "0",
+});

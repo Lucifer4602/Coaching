@@ -7,6 +7,9 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { update } from "@/redux/FormSlice";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { motion } from "framer-motion";
 
 export const Signup = () => {
   const [formData, setFormData] = useState({
@@ -19,19 +22,19 @@ export const Signup = () => {
   });
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState("student");
+  const dispatch = useDispatch();
 
   const handleTabChange = (tab) => {
     setSelectedTab(tab);
     setFormData((prev) => ({ ...prev, role: tab }));
   };
 
-  const handler = (event) => {
+  const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-  const dispatch = useDispatch();
 
-  const submit = async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       const response = await axios.post(
@@ -40,167 +43,183 @@ export const Signup = () => {
       );
       dispatch(update(formData));
       navigate("/verifyOtp");
+      toast.success("Account created successfully! Please verify your email.");
     } catch (error) {
       console.error(error);
+      toast.error("Signup failed. Please check your information.");
     }
-
-    // Add ur form submission logic here
   };
 
   return (
-    <div>
-      <div className="h-screen w-screen bg-gray-800">
-        <Navbar></Navbar>
-        <div className="flex flex-row justify-evenly gap-10 ">
-          <div className="mt-28 flex flex-col gap-1">
-            <div className="font-bold text-4xl text-white w-full mb-7">
-              Join the millions learning to <br></br>code with Lucifer for free
+    <div className="min-h-screen bg-gradient-to-b from-blue-400 to-purple-500">
+      <Navbar />
+      <div className="flex flex-col md:flex-row justify-center items-center h-full gap-8">
+        <div className="ml-16"></div>
+        <div className="md:w-1/2 lg:w-1/3 mt-8 md:mt-0 flex flex-col items-center">
+          <motion.div
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-8"
+          >
+            <div className="font-bold text-4xl md:text-5xl text-white mb-7">
+              Join the millions learning to code with Lucifer for free
             </div>
-            <div className="text-cyan-900 font-sans font-semibold text-xl mb-4">
+            <div className="text-cyan-900 font-sans font-semibold text-lg mb-4">
               Build skills for today, tomorrow, and beyond.
-              <span className="text-blue-300 font-mono font-semibold">
-                Education<br></br> to future-proof your career.
+              <span className="block text-blue-300 font-mono font-semibold">
+                Education to future-proof your career.
               </span>
             </div>
-            <form onSubmit={submit}>
-              <Tabs defaultValue="student" className="w-[400px]">
-                <TabsList>
-                  <TabsTrigger
-                    value="student"
-                    className={`text-lg ${
-                      selectedTab === "student" && "active"
-                    }`}
-                    onClick={() => handleTabChange("student")}
-                  >
-                    student
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="instructor"
-                    className={`text-lg ${
-                      selectedTab === "instructor" && "active"
-                    }`}
-                    onClick={() => handleTabChange("instructor")}
-                  >
-                    instructor
-                  </TabsTrigger>
-                </TabsList>
-              </Tabs>
-
-              <div className="flex flex-row gap-2 justify-start">
-                <div className="flex flex-col justify-start gap-2 w-full">
-                  <label
-                    htmlFor="firstName"
-                    className="text-white font-mono font-bold text-base"
-                  >
-                    First Name<span className="text-red-600">*</span>
-                  </label>
-                  <Input
-                    type="text"
-                    placeholder="Fname"
-                    required
-                    name="firstName"
-                    id="firstName"
-                    value={formData.firstName}
-                    onChange={handler}
-                  ></Input>
-                </div>
-                <div className="flex flex-col gap-2 w-full">
-                  <label
-                    htmlFor="lastName"
-                    className="text-white font-mono font-bold text-base"
-                  >
-                    Last Name<span className="text-red-600">*</span>
-                  </label>
-                  <Input
-                    type="text"
-                    placeholder="Lname"
-                    required
-                    name="lastName"
-                    id="lastName"
-                    value={formData.lastName}
-                    onChange={handler}
-                  ></Input>
-                </div>
-              </div>
-              <div className="mt-2 mb-2">
-                <label
-                  htmlFor="email"
-                  className="text-white font-mono font-bold text-base"
+          </motion.div>
+          <form
+            onSubmit={handleSubmit}
+            className="w-full max-w-md p-4 md:p-8 bg-white rounded-lg shadow-md"
+          >
+            <Tabs defaultValue="student" className="w-full mb-4">
+              <TabsList>
+                <TabsTrigger
+                  value="student"
+                  className={`text-lg ${selectedTab === "student" && "active"}`}
+                  onClick={() => handleTabChange("student")}
                 >
-                  Email<span className="text-red-600">*</span>
+                  Student
+                </TabsTrigger>
+                <TabsTrigger
+                  value="instructor"
+                  className={`text-lg ${
+                    selectedTab === "instructor" && "active"
+                  }`}
+                  onClick={() => handleTabChange("instructor")}
+                >
+                  Instructor
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+
+            <div className="flex flex-row  gap-2">
+              <div className="w-full md:w-1/2">
+                <label
+                  htmlFor="firstName"
+                  className="text-gray-800 font-mono font-bold text-lg"
+                >
+                  First Name<span className="text-red-600">*</span>
                 </label>
                 <Input
-                  type="email"
-                  placeholder="email"
+                  type="text"
+                  placeholder="First Name"
                   required
-                  name="email"
-                  id="email"
-                  value={formData.email}
-                  onChange={handler}
-                ></Input>
+                  name="firstName"
+                  id="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  className="input-field"
+                />
               </div>
-              <div className="flex flex-row gap-2 justify-start">
-                <div className="flex flex-col justify-start gap-2 w-full">
-                  <label
-                    htmlFor="password"
-                    className="text-white font-mono font-bold text-base"
-                  >
-                    Create Password<span className="text-red-600">*</span>
-                  </label>
-                  <Input
-                    type="password"
-                    placeholder="password"
-                    required
-                    name="password"
-                    id="password"
-                    value={formData.password}
-                    onChange={handler}
-                  ></Input>
-                </div>
-                <div className="flex flex-col gap-2 w-full">
-                  <label
-                    htmlFor="confirmPassword"
-                    className="text-white font-mono font-bold text-base"
-                  >
-                    Confirm Password<span className="text-red-600">*</span>
-                  </label>
-                  <Input
-                    type="password"
-                    placeholder="password"
-                    required
-                    name="confirmPassword"
-                    id="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handler}
-                  ></Input>
-                </div>
+              <div className="w-full md:w-1/2">
+                <label
+                  htmlFor="lastName"
+                  className="text-gray-800 font-mono font-bold text-lg"
+                >
+                  Last Name<span className="text-red-600">*</span>
+                </label>
+                <Input
+                  type="text"
+                  placeholder="Last Name"
+                  required
+                  name="lastName"
+                  id="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  className="input-field"
+                />
               </div>
-
-              <Button
-                type="submit"
-                variant="ghost"
-                className="text-white font-mono font-bold text-xl"
-              >
-                Create Account
-              </Button>
-            </form>
-          </div>
-
-          <div className="relative">
-            <div className="relative">
-              <img
-                src="https://th.bing.com/th/id/OIP.bjpuVFr7I-ezRBgsZOjGVAAAAA?pid=ImgDet&w=207&h=207&c=7&dpr=1.3"
-                width="400px"
-                className="relative mt-28 h-96 z-10"
-                alt="Image1"
-              />
-              <img
-                src="https://th.bing.com/th/id/OIP.QfVtbp3K9OYu_skQuNJi7AHaHa?rs=1&pid=ImgDetMain"
-                width="400px"
-                className="absolute top-3 left-3 h-96 "
-                alt="Image2"
-              ></img>
             </div>
+
+            <div className="mt-4">
+              <label
+                htmlFor="email"
+                className="text-gray-800 font-mono font-bold text-lg"
+              >
+                Email<span className="text-red-600">*</span>
+              </label>
+              <Input
+                type="email"
+                placeholder="Email"
+                required
+                name="email"
+                id="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="input-field"
+              />
+            </div>
+
+            <div className="flex flex-row flex-wrap gap-2 mt-4">
+              <div className="w-full md:w-1/2">
+                <label
+                  htmlFor="password"
+                  className="text-gray-800 font-mono font-bold text-lg"
+                >
+                  Create Password<span className="text-red-600">*</span>
+                </label>
+                <Input
+                  type="password"
+                  placeholder="Password"
+                  required
+                  name="password"
+                  id="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="input-field"
+                />
+              </div>
+              <div className="w-full md:w-1/2">
+                <label
+                  htmlFor="confirmPassword"
+                  className="text-gray-800 font-mono font-bold text-lg"
+                >
+                  Confirm Password<span className="text-red-600">*</span>
+                </label>
+                <Input
+                  type="password"
+                  placeholder="Confirm Password"
+                  required
+                  name="confirmPassword"
+                  id="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  className="input-field"
+                />
+              </div>
+            </div>
+
+            <Button
+              type="submit"
+              variant="primary"
+              className="w-full mt-6 text-white font-mono font-bold text-xl"
+            >
+              Create Account
+            </Button>
+          </form>
+          <div className="mt-10"></div>
+        </div>
+
+        {/* Responsive Image Section */}
+        <div className="relative md:ml-8 hidden md:block">
+          <div className="relative">
+            <img
+              src="https://th.bing.com/th/id/OIP.bjpuVFr7I-ezRBgsZOjGVAAAAA?pid=ImgDet&w=207&h=207&c=7&dpr=1.3"
+              width="500px"
+              className="relative mt-28 h-96 z-10"
+              alt="Image1"
+            />
+            <img
+              src="https://th.bing.com/th/id/OIP.QfVtbp3K9OYu_skQuNJi7AHaHa?rs=1&pid=ImgDetMain"
+              width="500px"
+              className="absolute top-3 left-3 h-96"
+              alt="Image2"
+            ></img>
           </div>
         </div>
       </div>

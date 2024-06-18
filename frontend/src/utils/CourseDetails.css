@@ -1,0 +1,26 @@
+.animated-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  animation: color-change 20s infinite;
+  background: linear-gradient(
+    45deg,
+    rgba(121, 9, 239, 0.8),
+    rgba(9, 121, 239, 0.8)
+  );
+}
+
+@keyframes color-change {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

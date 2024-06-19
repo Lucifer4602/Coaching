@@ -8,15 +8,14 @@ import "../utils/Scroll.css";
 
 export const Addcourse = () => {
   return (
-    <div className="h-screen w-screen overflow-hidden">
+    <div className="h-screen w-screen overflow-hidden flex flex-col">
       <Navbar />
-
-      <Separator className=" bg-slate-900" />
-      <div className="flex flex-row h-screen">
-        <Pnav />
-        <div className="w-[80%] bg-slate-900 mx-auto">
-          <ScrollArea className="h-[75%] w-[70%] m-auto mt-10 mb-10 overflow-scroll overflow-x-hidden scrollbar-hide">
-            <Ccomp></Ccomp>
+      <Separator className="bg-slate-900" />
+      <div className="flex flex-1 flex-col lg:flex-row h-full">
+        <Pnav className="flex-shrink-0" />
+        <div className="flex-1 bg-slate-900 p-4">
+          <ScrollArea className="h-full overflow-y-auto scrollbar-hide p-4">
+            <Ccomp />
           </ScrollArea>
         </div>
       </div>

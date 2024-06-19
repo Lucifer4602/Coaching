@@ -58,10 +58,10 @@ export const ViewCourse = () => {
       <Navbar />
       <Separator className="bg-slate-900" />
       <div className="flex flex-1">
-        <div className="flex-1 bg-slate-900 overflow-hidden">
+        <div className="w-full md:w-1/4 bg-slate-900 overflow-hidden">
           <ScrollArea className="h-full overflow-y-auto">
-            <div className="mx-4 ">
-              <div className="flex flex-row justify-center items-center gap-20">
+            <div className="mx-4">
+              <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-20">
                 <h1 className="text-3xl font-semibold text-white mb-4">
                   {enrolledCourse.courseName}
                 </h1>
@@ -117,14 +117,14 @@ export const ViewCourse = () => {
             </div>
           </ScrollArea>
         </div>
-        <div className="flex-1 bg-black text-white relative">
+        <div className="w-full md:w-3/4 bg-black text-white relative">
           {selectedVideoUrl && (
             <>
               <ReactPlayer
                 url={selectedVideoUrl}
                 controls
                 width="100%"
-                height="100%"
+                height="80%"
                 playing
                 config={{
                   youtube: {
@@ -136,7 +136,7 @@ export const ViewCourse = () => {
                 }}
                 className="absolute top-0 left-0"
               />
-              <div className="p-4 mt-16">
+              <div className="p-4 mt-16 absolute bottom-0">
                 <h3 className="text-lg font-medium text-white">
                   {selectedSubsection.name}
                 </h3>

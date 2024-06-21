@@ -21,27 +21,19 @@ const { contactUs } = require("./controllers/contactUs");
 
 app.use(express.json());
 app.use(cookieParser());
-const allowedOrigins = [
-  "http://localhost:3000",
-  "http://localhost:5173",
-  "https://tech-flix-api.vercel.app/",
-];
 
 app.get("/", (req, res) => {
   res.json("done");
 });
-// Enable CORS for specific origins
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-  })
-);
+
+const corsConfig = {
+  origin: "*",
+  credential: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+};
+app.options("", cors(corsConfig));
+
+app.use(cors(corsConfig));
 
 app.use(
   fileUpload({

@@ -35,12 +35,12 @@ app.use(cookieParser());
 // cloudinaryConnect();
 
 // Routes
-app.use("/api/v1/auth", userRoutes);
-app.use("/api/v1/profile", profileRoutes);
-app.use("/api/v1/course", courseRoutes);
-app.use("/api/v1/tags", tagsRoutes);
-app.use("/api/v1/contact", contactUs);
-app.use("/api/v1/cart", cartRoutes);
+// app.use("/api/v1/auth", userRoutes);
+// app.use("/api/v1/profile", profileRoutes);
+// app.use("/api/v1/course", courseRoutes);
+// app.use("/api/v1/tags", tagsRoutes);
+// app.use("/api/v1/contact", contactUs);
+// app.use("/api/v1/cart", cartRoutes);
 
 // Root Route
 app.get("/", (req, res) => {

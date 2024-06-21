@@ -5,7 +5,7 @@ const app = express();
 // const courseRoutes = require("./routes/courses");
 // const tagsRoutes = require("./routes/tag");
 // const cartRoutes = require("./routes/cart");
-// const fileUpload = require("express-fileupload");
+const fileUpload = require("express-fileupload");
 const { cloudinaryConnect } = require("./cloudinary");
 
 app.use(express.json());

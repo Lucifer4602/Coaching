@@ -31,7 +31,7 @@ export const EnrolledCourses = () => {
             },
           }
         );
-        console.log(response.data.data.courses);
+        // console.log(response.data.data.courses);
         setEnrolled(response.data.data.courses);
         setLoading(false);
       } catch (error) {

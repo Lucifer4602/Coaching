@@ -104,7 +104,7 @@ export const Wishlist = () => {
         }
       );
       if (response.status === 200) {
-        console.log("Item added to cart");
+        // console.log("Item added to cart");
         await handleRemoveFromWishlist(itemId);
         toast.success("Item added to cart successfully");
       }

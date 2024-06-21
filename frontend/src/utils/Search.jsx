@@ -84,7 +84,7 @@ export const Search = () => {
         }
       );
 
-      console.log("Item moved to wishlist");
+      // console.log("Item moved to wishlist");
       toast.success("Item saved for later successfully");
     } catch (error) {
       console.error("Error moving to wishlist:", error);

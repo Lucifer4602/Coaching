@@ -247,7 +247,7 @@ export const CourseDetails = () => {
           },
         }
       );
-      console.log(response);
+      // console.log(response);
       toast.success("Successfully enrolled!");
     } catch (error) {
       console.error(

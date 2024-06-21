@@ -74,7 +74,7 @@ export const About = () => {
         "http://localhost:3000/api/v1/contact/form",
         formData
       );
-      console.log("Form submitted successfully", response.data);
+      // console.log("Form submitted successfully", response.data);
       toast({
         title: "Form successfully submitted",
       });

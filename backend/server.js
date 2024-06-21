@@ -8,8 +8,6 @@ const cartRoutes = require("./routes/cart");
 const fileUpload = require("express-fileupload");
 const { cloudinaryConnect } = require("./cloudinary");
 
-app.use(express.json());
-
 app.listen(3000, () => {
   console.log("hello server is started haha");
 });
@@ -17,7 +15,7 @@ app.listen(3000, () => {
 const db = require("./database");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const { contactUs } = require("./controllers/contactUs");
+const contactUs = require("./routes/contact");
 
 app.use(express.json());
 app.use(cookieParser());

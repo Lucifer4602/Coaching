@@ -48,7 +48,7 @@ export const Scomp1 = () => {
     try {
       setLoading(true);
       await axios.put(
-        `http://localhost:3000/api/v1/profile/updateProfile?id=${select._id}`,
+        `https://techflix-api-vfly.onrender.com/api/v1/profile/updateProfile?id=${select._id}`,
         data,
         {
           headers: {

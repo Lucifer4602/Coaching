@@ -26,7 +26,7 @@ export const About = () => {
     const fetchAllReviews = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/v1/course/getReviews`
+          `https://techflix-api-vfly.onrender.com/api/v1/course/getReviews`
         );
 
         const allReviews = response.data.data;
@@ -71,7 +71,7 @@ export const About = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/v1/contact/form",
+        "https://techflix-api-vfly.onrender.com/api/v1/contact/form",
         formData
       );
       // console.log("Form submitted successfully", response.data);

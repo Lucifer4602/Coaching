@@ -30,7 +30,7 @@ export const Contact = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/v1/contact/form",
+        "https://techflix-api-vfly.onrender.com/api/v1/contact/form",
         formData
       );
       // console.log("Form submitted successfully", response.data);

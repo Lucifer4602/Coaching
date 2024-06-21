@@ -142,7 +142,7 @@ export const Navbar = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/v1/course/getAllCourses"
+          "https://techflix-api-vfly.onrender.com/api/v1/course/getAllCourses"
         );
         const x = response.data.data;
         dispatch(update({ ...select, courses: x }));

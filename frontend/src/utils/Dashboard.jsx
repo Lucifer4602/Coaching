@@ -39,7 +39,7 @@ export const Dashboard = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/v1/profile/instructorDashboard",
+          "https://techflix-api-vfly.onrender.com/api/v1/profile/instructorDashboard",
           {
             params: { id: select?._id },
             headers: {

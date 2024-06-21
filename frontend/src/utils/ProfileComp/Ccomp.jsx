@@ -101,7 +101,7 @@ export const Ccomp = () => {
         formData.append("sectionId", sectionId[editingSection]);
         formData.append("courseId", course_id);
         await axios.put(
-          "http://localhost:3000/api/v1/course/updateSection",
+          "https://techflix-api-vfly.onrender.com/api/v1/course/updateSection",
           formData,
           {
             headers: {
@@ -124,7 +124,7 @@ export const Ccomp = () => {
         formData.append("sectionName", data.section);
         formData.append("courseId", course_id);
         const response = await axios.post(
-          "http://localhost:3000/api/v1/course/addSection",
+          "https://techflix-api-vfly.onrender.com/api/v1/course/addSection",
           formData,
           {
             headers: {
@@ -152,7 +152,7 @@ export const Ccomp = () => {
   const handleDeleteSection = async (index) => {
     try {
       const response = await axios.delete(
-        "http://localhost:3000/api/v1/course/deleteSection",
+        "https://techflix-api-vfly.onrender.com/api/v1/course/deleteSection",
         {
           params: {
             sectionId: sectionId[index],
@@ -194,7 +194,7 @@ export const Ccomp = () => {
       formData.append("duration", "23");
       formData.append("videoFile", video);
       const response = await axios.post(
-        "http://localhost:3000/api/v1/course/addSubSection",
+        "https://techflix-api-vfly.onrender.com/api/v1/course/addSubSection",
         formData,
         {
           headers: {
@@ -245,7 +245,7 @@ export const Ccomp = () => {
       const y = subsectionId[sectionIndex][lectureIndex]._id;
 
       await axios.delete(
-        `http://localhost:3000/api/v1/course/deleteSubSection`,
+        `https://techflix-api-vfly.onrender.com/api/v1/course/deleteSubSection`,
         {
           params: {
             subsectionId: y,
@@ -287,7 +287,7 @@ export const Ccomp = () => {
       formData.append("videoFile", video);
 
       const response = await axios.put(
-        `http://localhost:3000/api/v1/course/updateSubSection`,
+        `https://techflix-api-vfly.onrender.com/api/v1/course/updateSubSection`,
         formData,
         {
           headers: {
@@ -322,7 +322,7 @@ export const Ccomp = () => {
       }
 
       const response = await axios.post(
-        "http://localhost:3000/api/v1/course/createCourse",
+        "https://techflix-api-vfly.onrender.com/api/v1/course/createCourse",
         formData,
         {
           headers: {

@@ -74,7 +74,7 @@ export const CourseDetails = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/v1/course/getCourse`,
+          `https://techflix-api-vfly.onrender.com/api/v1/course/getCourse`,
           {
             params: { courseId: id },
             headers: {
@@ -132,7 +132,7 @@ export const CourseDetails = () => {
   const checkWishlistStatus = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/v1/cart/checkWishlistStatus`,
+        `https://techflix-api-vfly.onrender.com/api/v1/cart/checkWishlistStatus`,
         {
           params: { userId, courseId: id },
           headers: {
@@ -150,7 +150,7 @@ export const CourseDetails = () => {
   const checkCartStatus = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/v1/cart/checkCartStatus`,
+        `https://techflix-api-vfly.onrender.com/api/v1/cart/checkCartStatus`,
         {
           params: { userId, courseId: id },
           headers: {
@@ -168,18 +168,21 @@ export const CourseDetails = () => {
   const wishlistHandler = async () => {
     try {
       if (wish) {
-        await axios.delete(`http://localhost:3000/api/v1/cart/removeWishlist`, {
-          params: { userId, courseId: id },
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-            "Content-Type": "application/json",
-          },
-        });
+        await axios.delete(
+          `https://techflix-api-vfly.onrender.com/api/v1/cart/removeWishlist`,
+          {
+            params: { userId, courseId: id },
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
         setWish(false);
         toast.info("Removed from Wishlist");
       } else {
         await axios.post(
-          `http://localhost:3000/api/v1/cart/addWishlist`,
+          `https://techflix-api-vfly.onrender.com/api/v1/cart/addWishlist`,
           { userId, courseId: id },
           {
             headers: {
@@ -203,18 +206,21 @@ export const CourseDetails = () => {
   const cartHandler = async () => {
     try {
       if (inCart) {
-        await axios.delete(`http://localhost:3000/api/v1/cart/removeCart`, {
-          params: { userId, courseId: id },
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-            "Content-Type": "application/json",
-          },
-        });
+        await axios.delete(
+          `https://techflix-api-vfly.onrender.com/api/v1/cart/removeCart`,
+          {
+            params: { userId, courseId: id },
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
         setInCart(false);
         toast.info("Removed from Cart");
       } else {
         await axios.post(
-          `http://localhost:3000/api/v1/cart/addCart`,
+          `https://techflix-api-vfly.onrender.com/api/v1/cart/addCart`,
           { userId, courseId: id },
           {
             headers: {
@@ -238,7 +244,7 @@ export const CourseDetails = () => {
   const courseHandler = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/v1/cart/addEnrolled`,
+        `https://techflix-api-vfly.onrender.com/api/v1/cart/addEnrolled`,
         { userId, courseId: id },
         {
           headers: {
@@ -261,7 +267,7 @@ export const CourseDetails = () => {
   const fetchAverageRating = async (courseId) => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/v1/course/getAverageRating`,
+        `https://techflix-api-vfly.onrender.com/api/v1/course/getAverageRating`,
         {
           params: { courseId },
           headers: {
@@ -282,7 +288,7 @@ export const CourseDetails = () => {
   const fetchAllReviews = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/v1/course/getReviews`,
+        `https://techflix-api-vfly.onrender.com/api/v1/course/getReviews`,
         {
           headers: {
             Authorization: `Bearer ${authToken}`,

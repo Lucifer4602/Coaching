@@ -22,7 +22,7 @@ export const Search = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/v1/course/search?q=${query}`
+          `https://techflix-api-vfly.onrender.com/api/v1/course/search?q=${query}`
         );
         setCourses(response.data.data);
       } catch (e) {
@@ -52,7 +52,7 @@ export const Search = () => {
   const fetchAverageRating = async (courseId) => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/v1/course/getAverageRating`,
+        `https://techflix-api-vfly.onrender.com/api/v1/course/getAverageRating`,
         {
           params: { courseId: courseId },
           headers: {
@@ -71,7 +71,7 @@ export const Search = () => {
   const handleSaveForLater = async (courseId) => {
     try {
       await axios.post(
-        `http://localhost:3000/api/v1/cart/addWishlist`,
+        `https://techflix-api-vfly.onrender.com/api/v1/cart/addWishlist`,
         {
           userId: select._id,
           courseId: courseId,

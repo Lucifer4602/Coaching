@@ -25,7 +25,7 @@ export const Login = () => {
     event.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/v1/auth/login",
+        "https://techflix-api-vfly.onrender.com/api/v1/auth/login",
         formData
       );
       const userId = response.data.user1._id;

@@ -25,7 +25,7 @@ export const Wishlist = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/v1/profile/getUserDetails`,
+          `https://techflix-api-vfly.onrender.com/api/v1/profile/getUserDetails`,
           {
             params: { id: select?._id },
             headers: {
@@ -49,7 +49,7 @@ export const Wishlist = () => {
   const fetchAverageRating = async (courseId) => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/v1/course/getAverageRating`,
+        `https://techflix-api-vfly.onrender.com/api/v1/course/getAverageRating`,
         {
           params: { courseId: courseId },
           headers: {
@@ -68,7 +68,7 @@ export const Wishlist = () => {
   const handleRemoveFromWishlist = async (itemId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3000/api/v1/cart/removeWishlist`,
+        `https://techflix-api-vfly.onrender.com/api/v1/cart/removeWishlist`,
         {
           params: { userId: select?._id, courseId: itemId },
           headers: {
@@ -91,7 +91,7 @@ export const Wishlist = () => {
   const handleAddToCart = async (itemId) => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/v1/cart/addCart`,
+        `https://techflix-api-vfly.onrender.com/api/v1/cart/addCart`,
         {
           userId: select?._id,
           courseId: itemId,

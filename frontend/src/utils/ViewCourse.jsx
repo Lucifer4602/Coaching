@@ -33,7 +33,7 @@ export const ViewCourse = () => {
       const x = rating.toString();
       console.log(x, review, enrolledCourse._id, select._id);
       const response = await axios.post(
-        "http://localhost:3000/api/v1/course/createRating",
+        "https://techflix-api-vfly.onrender.com/api/v1/course/createRating",
         {
           rating: x,
           review: review,

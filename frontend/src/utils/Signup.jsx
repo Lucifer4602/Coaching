@@ -38,7 +38,7 @@ export const Signup = () => {
     event.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/v1/auth/sendotp",
+        "https://techflix-api-vfly.onrender.com/api/v1/auth/sendotp",
         formData
       );
       dispatch(update(formData));

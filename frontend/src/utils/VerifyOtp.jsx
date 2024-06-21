@@ -29,7 +29,10 @@ export const VerifyOtp = () => {
   const submitHandler = async () => {
     const updatedForm = { ...formData, otp: otp };
     try {
-      await axios.post("http://localhost:3000/api/v1/auth/signup", updatedForm);
+      await axios.post(
+        "https://techflix-api-vfly.onrender.com/api/v1/auth/signup",
+        updatedForm
+      );
       dispatch(update(updatedForm));
       navigate("/login");
     } catch (error) {
@@ -40,7 +43,10 @@ export const VerifyOtp = () => {
 
   const resendOTP = async () => {
     try {
-      await axios.post("http://localhost:3000/api/v1/auth/sendotp", formData);
+      await axios.post(
+        "https://techflix-api-vfly.onrender.com/api/v1/auth/sendotp",
+        formData
+      );
       showToast("OTP resent successfully.");
     } catch (error) {
       console.error(error);

@@ -23,7 +23,7 @@ export const Mycourse = () => {
     const fetchCourses = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/v1/course/getInstructorCourses",
+          "https://techflix-api-vfly.onrender.com/api/v1/course/getInstructorCourses",
           {
             params: { id: formData?._id },
             headers: {
@@ -58,13 +58,16 @@ export const Mycourse = () => {
 
   const deleteHandler = async (courseId) => {
     try {
-      await axios.delete("http://localhost:3000/api/v1/course/deleteCourse", {
-        params: { courseId },
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-          "Content-Type": "application/json",
-        },
-      });
+      await axios.delete(
+        "https://techflix-api-vfly.onrender.com/api/v1/course/deleteCourse",
+        {
+          params: { courseId },
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
       setCourses((prevCourses) =>
         prevCourses.filter((course) => course._id !== courseId)
       );
@@ -78,7 +81,7 @@ export const Mycourse = () => {
   const editHandler = async (courseId) => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/api/v1/course/getCourse",
+        "https://techflix-api-vfly.onrender.com/api/v1/course/getCourse",
         {
           params: { courseId: courseId },
           headers: {

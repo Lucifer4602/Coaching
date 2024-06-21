@@ -22,7 +22,7 @@ export const EnrolledCourses = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/v1/profile/getUserDetails`,
+          `https://techflix-api-vfly.onrender.com/api/v1/profile/getUserDetails`,
           {
             params: { id: select?._id },
             headers: {

@@ -31,7 +31,7 @@ export const Card1 = ({ tag, value }) => {
   const fetchAverageRating = async (courseId) => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/v1/course/getAverageRating`,
+        `https://techflix-api-vfly.onrender.com/api/v1/course/getAverageRating`,
         {
           params: { courseId: courseId },
           headers: {

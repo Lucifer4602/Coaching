@@ -15,7 +15,7 @@ export const Home = () => {
     const fetchAllReviews = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/v1/course/getReviews`
+          `https://techflix-api-vfly.onrender.com/api/v1/course/getReviews`
         );
 
         const allReviews = response.data.data;

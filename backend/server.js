@@ -7,34 +7,25 @@ const tagsRoutes = require("./routes/tag");
 const cartRoutes = require("./routes/cart");
 const fileUpload = require("express-fileupload");
 const { cloudinaryConnect } = require("./cloudinary");
-
-app.use(express.json());
-
-app.listen(3000, () => {
-  console.log("hello server is started haha");
-});
-
 const db = require("./database");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const { contactUs } = require("./controllers/contactUs");
 
+// Middleware
 app.use(express.json());
 app.use(cookieParser());
 
-app.get("/", (req, res) => {
-  res.json("done");
-});
-
+// CORS Configuration
 const corsConfig = {
   origin: "*",
-  credential: true,
+  credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
 };
-app.options("", cors(corsConfig));
-
 app.use(cors(corsConfig));
+app.options("*", cors(corsConfig));  // Handle preflight requests
 
+// File Upload Configuration
 app.use(
   fileUpload({
     useTempFiles: true,
@@ -43,6 +34,7 @@ app.use(
 );
 cloudinaryConnect();
 
+// Routes
 app.use("/api/v1/auth", userRoutes);
 app.use("/api/v1/profile", profileRoutes);
 app.use("/api/v1/course", courseRoutes);
@@ -50,4 +42,16 @@ app.use("/api/v1/tags", tagsRoutes);
 app.use("/api/v1/contact", contactUs);
 app.use("/api/v1/cart", cartRoutes);
 
-// db();
+// Root Route
+app.get("/", (req, res) => {
+  res.json("done");
+});
+
+// Database Connection
+db();
+
+// Server Listener
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server started on port ${PORT}`);
+});

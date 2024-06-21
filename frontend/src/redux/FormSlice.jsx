@@ -37,9 +37,14 @@ export const formSlice = createSlice({
       localStorage.removeItem("reduxState");
     },
   },
+  // extraReducers: (builder) => {
+  //   builder.addCase(PURGE, (state) => {
+  //     state = initialState;
+  //   });
+  // },
   extraReducers: (builder) => {
     builder.addCase(PURGE, (state) => {
-      state = initialState;
+      Object.assign(state, initialState);
     });
   },
 });

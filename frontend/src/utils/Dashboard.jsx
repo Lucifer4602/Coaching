@@ -92,41 +92,43 @@ export const Dashboard = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-900">
+    <div className="h-screen w-screen overflow-hidden bg-gradient-to-b from-gray-900 to-black">
       <Navbar />
-      <Separator className="bg-slate-900" />
-      <div className="flex flex-grow">
+      <Separator className="bg-slate-700" />
+      <div className="flex flex-row h-screen">
         <Pnav />
-        <div className="flex-grow overflow-hidden">
-          <ScrollArea className="h-full w-full p-6">
-            <div className="text-white text-2xl mb-6">Dashboard</div>
-            <div className="mb-12 p-4 bg-gray-800 rounded-lg shadow-md">
-              <h3 className="text-white text-xl mb-4">Enrolled Students</h3>
-              <div className="w-full h-64">
-                <Bar
-                  data={enrolledStudentsData}
-                  options={{ maintainAspectRatio: false }}
-                />
+        <div className="w-[100%] bg-gradient-to-b from-gray-900 to-black mx-auto">
+          <ScrollArea className="h-[80%] w-[80%] m-auto mt-10 mb-10 overflow-scroll overflow-x-hidden scrollbar-hide">
+            <div>
+              <div className="text-white text-2xl mb-6">Dashboard</div>
+              <div className="mb-12 p-4 bg-gray-800 rounded-lg shadow-md">
+                <h3 className="text-white text-xl mb-4">Enrolled Students</h3>
+                <div className="w-full h-64">
+                  <Bar
+                    data={enrolledStudentsData}
+                    options={{ maintainAspectRatio: false }}
+                  />
+                </div>
               </div>
-            </div>
-            <div className="mb-12 p-4 bg-gray-800 rounded-lg shadow-md">
-              <h3 className="text-white text-xl mb-4">
-                Total Income Generated
-              </h3>
-              <div className="w-full h-64">
-                <Bar
-                  data={totalIncomeData}
-                  options={{ maintainAspectRatio: false }}
-                />
+              <div className="mb-12 p-4 bg-gray-800 rounded-lg shadow-md">
+                <h3 className="text-white text-xl mb-4">
+                  Total Income Generated
+                </h3>
+                <div className="w-full h-64">
+                  <Bar
+                    data={totalIncomeData}
+                    options={{ maintainAspectRatio: false }}
+                  />
+                </div>
               </div>
-            </div>
-            <div className="p-4 bg-gray-800 rounded-lg shadow-md">
-              <h3 className="text-white text-xl mb-4">Total Courses</h3>
-              <div className="w-full h-64">
-                <Pie
-                  data={coursesData}
-                  options={{ maintainAspectRatio: false }}
-                />
+              <div className="p-4 bg-gray-800 rounded-lg shadow-md">
+                <h3 className="text-white text-xl mb-4">Total Courses</h3>
+                <div className="w-full h-64">
+                  <Pie
+                    data={coursesData}
+                    options={{ maintainAspectRatio: false }}
+                  />
+                </div>
               </div>
             </div>
           </ScrollArea>

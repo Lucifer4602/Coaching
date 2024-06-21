@@ -20,7 +20,7 @@ export const Pnav = () => {
   return (
     <>
       {!isMobile && (
-        <div className="w-[20%] mx-auto bg-zinc-500 sticky  flex-col hidden sm:flex">
+        <div className="w-[20%] mx-auto bg-gradient-to-b from-gray-900 to-black sticky  flex-col hidden sm:flex text-white">
           {" "}
           {/* Added 'hidden sm:flex' */}
           <Button variant="ghost" onClick={() => navigate("/profile")}>
@@ -52,7 +52,7 @@ export const Pnav = () => {
               </Button>
             </>
           )}
-          <Separator className="my-9 bg-slate-900" />
+          <Separator className="my-9 bg-slate-700" />
           <Button variant="ghost" onClick={() => navigate("/settings")}>
             Settings
           </Button>

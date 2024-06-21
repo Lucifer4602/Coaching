@@ -8,12 +8,12 @@ import "../utils/Scroll.css";
 
 export const Addcourse = () => {
   return (
-    <div className="h-screen w-screen overflow-hidden flex flex-col">
+    <div className="h-screen w-screen overflow-hidden flex flex-col bg-gradient-to-b from-gray-900 to-black">
       <Navbar />
-      <Separator className="bg-slate-900" />
-      <div className="flex flex-1 flex-col lg:flex-row h-full">
-        <Pnav className="flex-shrink-0" />
-        <div className="flex-1 bg-slate-900 p-4">
+      <Separator className="bg-slate-700" />
+      <div className="flex flex-grow h-full">
+        <Pnav />
+        <div className="flex-1 bg-gradient-to-b from-gray-900 to-black p-4 overflow-auto">
           <ScrollArea className="h-full overflow-y-auto scrollbar-hide p-4">
             <Ccomp />
           </ScrollArea>

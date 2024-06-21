@@ -49,9 +49,9 @@ export const VerifyOtp = () => {
   };
 
   return (
-    <div className="bg-gradient-to-b from-blue-400 to-purple-500 min-h-screen">
+    <div className="bg-gradient-to-b from-gray-900 to-black min-h-screen">
       <Navbar />
-      <div className="bg-gradient-to-b from-blue-400 to-purple-500 min-h-screen flex flex-col justify-center items-center">
+      <div className="bg-gradient-to-b from-gray-900 to-black min-h-screen flex flex-col justify-center items-center px-6">
         <div className="flex flex-col justify-center items-center mt-10 md:mt-24 gap-4">
           <div className="font-bold text-4xl text-white">Verify Email</div>
           <div className="text-blue-300 font-mono font-semibold text-center">

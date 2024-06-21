@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Tag } from "../../hooks/Tag";
+import CustomFileUploader from "./CustomFileUploader";
 import Usetag from "../../hooks/Usetag";
 import { FileUploader } from "react-drag-drop-files";
 import { Button } from "@/components/ui/button";
@@ -33,71 +33,19 @@ import { DialogClose } from "@radix-ui/react-dialog";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-// import { update } from "@/redux/FormSlice";
-
-const EditLectureDialog = ({
-  isOpen,
-  onClose,
-  onSave,
-  lectureData,
-  onChange,
-  fileTypes,
-  xyz,
-}) => (
-  <Dialog open={isOpen} onOpenChange={onClose}>
-    <DialogContent>
-      <DialogHeader>Editing Lecture</DialogHeader>
-      <div>
-        <label htmlFor="editLtitle">Lecture Title</label>
-        <Input
-          type="text"
-          id="editLtitle"
-          name="Ltitle"
-          value={lectureData.Ltitle}
-          onChange={onChange}
-        />
-      </div>
-      <div>
-        <label htmlFor="editLdescription">Lecture Description</label>
-        <textarea
-          id="editLdescription"
-          rows="4"
-          cols="50"
-          name="Ldescription"
-          value={lectureData.Ldescription}
-          onChange={onChange}
-        />
-      </div>
-      <div>
-        <label>Lecture video</label>
-        <FileUploader
-          name="file"
-          types={fileTypes}
-          className="outline-double"
-          handleChange={xyz}
-        />
-      </div>
-      <DialogFooter>
-        <Button onClick={onSave}>Save</Button>
-        <Button variant="ghost" onClick={onClose}>
-          Cancel
-        </Button>
-      </DialogFooter>
-    </DialogContent>
-  </Dialog>
-);
+import { EditLectureDialog } from "./EditLectureDialog";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "../Scroll.css";
 
 export const Ecomp = () => {
   const select = useSelector((state) => state?.form?.FormData);
   const authToken = select?.authToken;
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
   const resp = useSelector((state) => state?.form?.FormData?.resp);
-  // console.log(resp);
 
   const [course_id, setCourseId] = useState(resp._id);
-  const maxTags = 5;
-  const { tags, handleAddTag, handleRemoveTag } = Usetag(maxTags);
+
   const fileTypes = ["jpg", "mp4"];
   const [step, setStep] = useState(1);
 
@@ -111,6 +59,7 @@ export const Ecomp = () => {
     Ltitle: "",
     Ldescription: "",
     benefits: resp.whatIsThis,
+    tag: resp.tag.name,
   });
 
   const [thumbnail, setThumbnail] = useState(null);
@@ -137,7 +86,6 @@ export const Ecomp = () => {
     }
   }, [resp.thumbnail]);
 
-  //   console.log(thumbnail);
   const [sections, setSections] = useState(
     resp.courseContent.map((item) => item.sectionName)
   );
@@ -145,12 +93,10 @@ export const Ecomp = () => {
   const [sectionId, setSectionId] = useState(
     resp.courseContent.map((item) => item._id)
   );
+
   const [subsectionId, setSubsectionId] = useState(
     resp.courseContent.map((item) => item.subsection.map((x) => x._id))
   );
-  const [editingSection, setEditingSection] = useState(null);
-
-  const [activeSection, setActiveSection] = useState(null);
 
   const [lectures, setLectures] = useState(
     resp.courseContent.map((item) =>
@@ -162,6 +108,9 @@ export const Ecomp = () => {
   );
 
   const [video, setVideo] = useState(null);
+
+  const [editingSection, setEditingSection] = useState(null);
+  const [activeSection, setActiveSection] = useState(null);
 
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingLectureIndex, setEditingLectureIndex] = useState(null);
@@ -180,8 +129,10 @@ export const Ecomp = () => {
   const handleSubmit = async () => {
     try {
       navigate("/mycourse");
+      toast.success("Course saved successfully!");
     } catch (error) {
       console.log(error);
+      toast.error("Failed to navigate to mycourse.");
     }
   };
 
@@ -206,13 +157,13 @@ export const Ecomp = () => {
           }
         );
         setSections(updatedSections);
-
         setEditingSection(null);
+        toast.success("Section updated successfully!");
       } catch (err) {
         console.error(err);
+        toast.error("Failed to update section.");
       }
     } else {
-      setSections((prevSections) => [...prevSections, data.section]);
       try {
         const formData = new FormData();
         formData.append("sectionName", data.section);
@@ -229,8 +180,11 @@ export const Ecomp = () => {
         );
         const sec = response.data.newSection._id;
         setSectionId((prev) => [...prev, sec]);
+        setSections((prevSections) => [...prevSections, data.section]);
+        toast.success("Section added successfully!");
       } catch (err) {
         console.error(err);
+        toast.error("Failed to add section.");
       }
     }
     setData({ ...data, section: "" });
@@ -256,27 +210,18 @@ export const Ecomp = () => {
           },
         }
       );
-      //   console.log(response.data);
       setSections((prevSections) => prevSections.filter((_, i) => i !== index));
       setSectionId((prevSectionId) =>
         prevSectionId.filter((_, i) => i !== index)
       );
+      toast.success("Section deleted successfully!");
     } catch (error) {
       console.error(error);
+      toast.error("Failed to delete section.");
     }
   };
 
   const handleSaveLecture = async (i) => {
-    const newLecture = {
-      Ltitle: data.Ltitle,
-      Ldescription: data.Ldescription,
-    };
-    const updatedLectures = [...lectures];
-    if (updatedLectures[activeSection]) {
-      updatedLectures[activeSection].push(newLecture);
-    } else {
-      updatedLectures[activeSection] = [newLecture];
-    }
     try {
       const formData = new FormData();
       formData.append("sectionId", sectionId[i]);
@@ -284,6 +229,7 @@ export const Ecomp = () => {
       formData.append("body", data.Ldescription);
       formData.append("duration", "23");
       formData.append("videoFile", video);
+
       const response = await axios.post(
         "http://localhost:3000/api/v1/course/addSubSection",
         formData,
@@ -294,26 +240,37 @@ export const Ecomp = () => {
           },
         }
       );
-      //   console.log(response.data);
-      const newsubsectionId =
+
+      const newSubsectionId =
         response.data.updatedSection.subsection[
           response.data.updatedSection.subsection.length - 1
         ]._id;
-      // console.log(newsubsectionId);
-      const values = [...subsectionId];
 
-      if (Array.isArray(values[activeSection])) {
-        values[activeSection].push(newsubsectionId);
-      } else {
-        values[activeSection] = [newsubsectionId];
+      const updatedLectures = [...lectures];
+      const updatedSubsectionIds = [...subsectionId];
+
+      if (!updatedLectures[activeSection]) {
+        updatedLectures[activeSection] = [];
+        updatedSubsectionIds[activeSection] = [];
       }
 
-      setSubsectionId(values);
+      updatedLectures[activeSection].push({
+        Ltitle: data.Ltitle,
+        Ldescription: data.Ldescription,
+      });
+
+      updatedSubsectionIds[activeSection].push(newSubsectionId);
+
+      setLectures(updatedLectures);
+      setSubsectionId(updatedSubsectionIds);
+
+      setData({ ...data, Ltitle: "", Ldescription: "" });
+
+      toast.success("Lecture added successfully!");
     } catch (err) {
       console.error(err);
+      toast.error("Failed to add lecture.");
     }
-    setLectures(updatedLectures);
-    setData({ ...data, Ltitle: "", Ldescription: "" });
   };
 
   const handleEditLecture = async (sectionIndex, lectureIndex) => {
@@ -331,18 +288,13 @@ export const Ecomp = () => {
   const handleDeleteLecture = async (sectionIndex, lectureIndex) => {
     try {
       const updatedLectures = [...lectures];
-
-      const updates = [...subsectionId];
-      const y = updates[sectionIndex].splice(lectureIndex, 1);
-
-      //   console.log("subsection" + y);
-      //   console.log("section" + sectionId[sectionIndex]);
+      const subsectionToDelete = subsectionId[sectionIndex][lectureIndex];
 
       await axios.delete(
         `http://localhost:3000/api/v1/course/deleteSubSection`,
         {
           params: {
-            subsectionId: y,
+            subsectionId: subsectionToDelete,
             sectionId: sectionId[sectionIndex],
           },
           headers: {
@@ -351,12 +303,16 @@ export const Ecomp = () => {
           },
         }
       );
+
       updatedLectures[sectionIndex].splice(lectureIndex, 1);
+      const updatedSubsectionIds = [...subsectionId];
+      updatedSubsectionIds[sectionIndex].splice(lectureIndex, 1);
       setLectures(updatedLectures);
-      updates[sectionIndex].splice(lectureIndex, 1);
-      setSubsectionId(updates);
+      setSubsectionId(updatedSubsectionIds);
+      toast.success("Lecture deleted successfully!");
     } catch (error) {
       console.error(error);
+      toast.error("Failed to delete lecture.");
     }
   };
 
@@ -395,10 +351,12 @@ export const Ecomp = () => {
       };
       setLectures(updatedLectures);
       setIsEditDialogOpen(false);
-      setData({ ...data, Ltitle: "", Ldescription: "" });
+      toast.success("Lecture updated successfully!");
     } catch (error) {
       console.error(error);
+      toast.error("Failed to update lecture.");
     }
+    setData({ ...data, Ltitle: "", Ldescription: "" });
   };
 
   const saveHandler = async () => {
@@ -427,323 +385,350 @@ export const Ecomp = () => {
       );
       const courseId = response.data.data._id;
       setCourseId(courseId);
+      toast.success("Course details saved successfully!");
+      setStep(step + 1);
     } catch (error) {
       console.error(error);
+      toast.error("Failed to save course details.");
     }
-    setStep(step + 1);
   };
 
   return (
     <div className="h-screen w-screen overflow-hidden">
       <Navbar />
 
-      <Separator className=" bg-slate-900" />
+      <Separator className=" bg-slate-700" />
       <div className="flex flex-row h-screen">
         <Pnav />
-        <div className="w-[80%] bg-slate-900 mx-auto">
+        <div className="w-[100%] bg-slate-900 mx-auto">
           <ScrollArea className="h-[75%] w-[70%] m-auto mt-10 mb-10 overflow-scroll overflow-x-hidden scrollbar-hide">
-            <div className="overflow-scroll">
-              <div>Edit Course</div>
+            <div>Edit Course</div>
 
-              <Card>
-                <CardContent style={{ display: step === 1 ? "block" : "none" }}>
-                  <label htmlFor="title">Course Title</label>
+            <Card>
+              <CardContent style={{ display: step === 1 ? "block" : "none" }}>
+                <label htmlFor="title" className="block mb-1">
+                  Course Title
+                </label>
+                <Input
+                  type="text"
+                  placeholder="Enter course title"
+                  id="title"
+                  name="title"
+                  value={data.title}
+                  onChange={handler}
+                  className="outline-double w-4/5"
+                />
+              </CardContent>
+
+              <CardContent style={{ display: step === 1 ? "block" : "none" }}>
+                <label htmlFor="description" className="block mb-1">
+                  Course Description
+                </label>
+                <div>
+                  <textarea
+                    rows="4"
+                    placeholder="Enter course description"
+                    id="description"
+                    name="description"
+                    value={data.description}
+                    onChange={handler}
+                    className="outline-double w-4/5"
+                  />
+                </div>
+              </CardContent>
+
+              <CardContent style={{ display: step === 1 ? "block" : "none" }}>
+                <label htmlFor="price" className="block mb-1">
+                  Course Price
+                </label>
+                <Input
+                  type="text"
+                  placeholder="Enter course price"
+                  id="price"
+                  name="price"
+                  value={data.price}
+                  onChange={handler}
+                  className="outline-double w-4/5"
+                />
+              </CardContent>
+
+              <CardContent style={{ display: step === 1 ? "block" : "none" }}>
+                <label htmlFor="level" className="block mb-1">
+                  Course level
+                </label>
+                <Select
+                  onValueChange={(value) =>
+                    setData((prev) => ({ ...prev, level: value }))
+                  }
+                >
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Choose a level" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="immediate">immediate</SelectItem>
+                    <SelectItem value="beginner">beginner</SelectItem>
+                    <SelectItem value="advance">advance</SelectItem>
+                    <SelectItem value="all">all</SelectItem>
+                  </SelectContent>
+                </Select>
+              </CardContent>
+
+              <CardContent style={{ display: step === 1 ? "block" : "none" }}>
+                <label htmlFor="language" className="block mb-1">
+                  Course language
+                </label>
+                <Select
+                  onValueChange={(value) =>
+                    setData((prev) => ({ ...prev, language: value }))
+                  }
+                >
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Choose a language" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="hindi">hindi</SelectItem>
+                    <SelectItem value="english">english</SelectItem>
+                  </SelectContent>
+                </Select>
+              </CardContent>
+
+              <CardContent style={{ display: step === 1 ? "block" : "none" }}>
+                <label htmlFor="tag" className="block mb-1">
+                  Tags
+                </label>
+                <Input
+                  type="text"
+                  id="tag"
+                  name="tag"
+                  value={data.tag}
+                  onChange={handler}
+                  className="outline-double w-4/5"
+                  placeholder="Enter category"
+                />
+              </CardContent>
+
+              <CardContent style={{ display: step === 1 ? "block" : "none" }}>
+                <label className="block mb-1">Course Thumbnail</label>
+                <CustomFileUploader
+                  name="file"
+                  types={fileTypes}
+                  className="outline-double w-4/5"
+                  handleChange={handleFileChange}
+                />
+              </CardContent>
+
+              <CardContent style={{ display: step === 1 ? "block" : "none" }}>
+                <label htmlFor="benefits" className="block mb-1">
+                  Course Benefits
+                </label>
+                <div>
+                  <textarea
+                    rows="4"
+                    cols="67"
+                    placeholder="Enter course benefits"
+                    id="benefits"
+                    name="benefits"
+                    value={data.benefits}
+                    onChange={handler}
+                    className="outline-double w-4/5"
+                  />
+                </div>
+              </CardContent>
+
+              <CardContent style={{ display: step === 1 ? "block" : "none" }}>
+                <div className="flex flex-row justify-evenly">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-11 w-20"
+                    onClick={saveHandler}
+                  >
+                    Save
+                    <ChevronRightIcon className="h-4 w-4" />
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-11 w-44"
+                    onClick={() => {
+                      setStep(step + 1);
+                    }}
+                  >
+                    Save without changes
+                    <ChevronRightIcon className="h-4 w-4" />
+                  </Button>
+                </div>
+              </CardContent>
+
+              <CardContent style={{ display: step === 2 ? "block" : "none" }}>
+                Course Builder
+              </CardContent>
+              <CardContent style={{ display: step === 2 ? "block" : "none" }}>
+                <div className="border-gray-950 border-2 p-4">
+                  <label htmlFor="section" className="block mb-1">
+                    Section Name
+                  </label>
                   <Input
                     type="text"
-                    placeholder="Enter course title"
-                    id="title"
-                    name="title"
-                    value={data.title}
+                    placeholder="Enter section name"
+                    id="section"
+                    name="section"
+                    value={data.section}
                     onChange={handler}
-                    className="outline-double"
+                    className="outline-double w-4/5"
                   />
-                </CardContent>
+                  <Button onClick={handleCreateSection}>
+                    {editingSection !== null ? "Update Section" : "Add Section"}
+                  </Button>
+                </div>
+              </CardContent>
 
-                <CardContent style={{ display: step === 1 ? "block" : "none" }}>
-                  <label htmlFor="description">Course Description</label>
-                  <div>
-                    <textarea
-                      rows="4"
-                      cols="67"
-                      placeholder="Enter course description"
-                      id="description"
-                      name="description"
-                      value={data.description}
-                      onChange={handler}
-                      className="outline-double"
-                    />
-                  </div>
-                </CardContent>
-
-                <CardContent style={{ display: step === 1 ? "block" : "none" }}>
-                  <label htmlFor="price">Course Price</label>
-                  <Input
-                    type="text"
-                    placeholder="Enter course price"
-                    id="price"
-                    name="price"
-                    value={data.price}
-                    onChange={handler}
-                    className="outline-double"
-                  />
-                </CardContent>
-
-                <CardContent style={{ display: step === 1 ? "block" : "none" }}>
-                  <label htmlFor="level">Course level</label>
-                  <Select
-                    onValueChange={(value) =>
-                      setData((prev) => ({ ...prev, level: value }))
-                    }
-                  >
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Choose a level" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="immediate">immediate</SelectItem>
-                      <SelectItem value="beginner">beginner</SelectItem>
-                      <SelectItem value="advance">advance</SelectItem>
-                      <SelectItem value="all">all</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </CardContent>
-
-                <CardContent style={{ display: step === 1 ? "block" : "none" }}>
-                  <label htmlFor="language">Course language</label>
-                  <Select
-                    onValueChange={(value) =>
-                      setData((prev) => ({ ...prev, language: value }))
-                    }
-                  >
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Choose a language" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="hindi">hindi</SelectItem>
-                      <SelectItem value="english">english</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </CardContent>
-
-                <CardContent style={{ display: step === 1 ? "block" : "none" }}>
-                  <label htmlFor="tag">Tags</label>
-                  <Tag
-                    tags={tags}
-                    addTag={handleAddTag}
-                    removeTag={handleRemoveTag}
-                    maxTags={maxTags}
-                  />
-                </CardContent>
-
-                <CardContent style={{ display: step === 1 ? "block" : "none" }}>
-                  <label>Course Thumbnail</label>
-                  <FileUploader
-                    name="file"
-                    types={fileTypes}
-                    className="outline-double"
-                    handleChange={handleFileChange}
-                    defaultFile={thumbnail}
-                  />
-                </CardContent>
-
-                <CardContent style={{ display: step === 1 ? "block" : "none" }}>
-                  <label htmlFor="benefits">Course Benefits</label>
-                  <div>
-                    <textarea
-                      rows="4"
-                      cols="67"
-                      placeholder="Enter course benefits"
-                      id="benefits"
-                      name="benefits"
-                      value={data.benefits}
-                      onChange={handler}
-                      className="outline-double"
-                    />
-                  </div>
-                </CardContent>
-
-                <CardContent style={{ display: step === 1 ? "block" : "none" }}>
-                  <div className="flex flex-row justify-evenly">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="h-11 w-20"
-                      onClick={saveHandler}
-                    >
-                      Save
-                      <ChevronRightIcon className="h-4 w-4" />
-                    </Button>
-
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="h-11 w-44"
-                      onClick={() => {
-                        setStep(step + 1);
-                      }}
-                    >
-                      Save without changes
-                      <ChevronRightIcon className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </CardContent>
-
-                <CardContent style={{ display: step === 2 ? "block" : "none" }}>
-                  Course Builder
-                </CardContent>
-                <CardContent style={{ display: step === 2 ? "block" : "none" }}>
-                  <div className="border-gray-950 border-2 p-4">
-                    <label htmlFor="section">Section Name</label>
-                    <Input
-                      type="text"
-                      placeholder="Enter section name"
-                      id="section"
-                      name="section"
-                      value={data.section}
-                      onChange={handler}
-                      className="outline-double"
-                    />
-                    <Button onClick={handleCreateSection}>
-                      {editingSection !== null
-                        ? "Update Section"
-                        : "Add Section"}
-                    </Button>
-                  </div>
-                </CardContent>
-
-                {sections.map((section, index) => (
-                  <CardContent
-                    key={index}
-                    className="flex flex-row"
-                    style={{ display: step === 2 ? "block" : "none" }}
-                  >
-                    <Collapsible>
-                      <CollapsibleTrigger>
-                        <div
-                          className="flex flex-row"
-                          onClick={() => setActiveSection(index)}
-                        >
-                          <div>{section}</div>
+              {sections.map((section, index) => (
+                <CardContent
+                  key={index}
+                  className="flex flex-row"
+                  style={{ display: step === 2 ? "block" : "none" }}
+                >
+                  <Collapsible>
+                    <CollapsibleTrigger>
+                      <div
+                        className="flex flex-row"
+                        onClick={() => setActiveSection(index)}
+                      >
+                        <div>{section}</div>
+                      </div>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      {(lectures[index] || []).map((lecture, lectureIndex) => (
+                        <div key={lectureIndex}>
+                          <div>{lecture.Ltitle}</div>
+                          <Button
+                            onClick={() =>
+                              handleEditLecture(index, lectureIndex)
+                            }
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            onClick={() =>
+                              handleDeleteLecture(index, lectureIndex)
+                            }
+                          >
+                            Delete
+                          </Button>
                         </div>
-                      </CollapsibleTrigger>
-                      <CollapsibleContent>
-                        {(lectures[index] || []).map(
-                          (lecture, lectureIndex) => (
-                            <div key={lectureIndex}>
-                              <div>{lecture.Ltitle}</div>
-                              <Button
-                                onClick={() =>
-                                  handleEditLecture(index, lectureIndex)
-                                }
-                              >
-                                Edit
-                              </Button>
-                              <Button
-                                onClick={() =>
-                                  handleDeleteLecture(index, lectureIndex)
-                                }
-                              >
-                                Delete
-                              </Button>
-                            </div>
-                          )
-                        )}
-                        <Dialog>
-                          <DialogTrigger>Add Lecture</DialogTrigger>
-                          <DialogContent>
-                            <DialogHeader>Adding Lecture</DialogHeader>
-                            <div>
-                              <label htmlFor="Ltitle">Lecture Title</label>
-                              <Input
-                                type="text"
-                                id="Ltitle"
-                                name="Ltitle"
-                                value={data.Ltitle}
-                                onChange={handler}
-                              />
-                            </div>
-                            <div>
-                              <label htmlFor="Ldescription">
-                                Lecture Description
-                              </label>
-                              <textarea
-                                id="Ldescription"
-                                rows="4"
-                                cols="50"
-                                name="Ldescription"
-                                value={data.Ldescription}
-                                onChange={handler}
-                              />
-                            </div>
-                            <div>
-                              <label>Lecture video</label>
-                              <FileUploader
-                                name="file"
-                                types={fileTypes}
-                                className="outline-double"
-                                handleChange={(file) => setVideo(file)}
-                              />
-                            </div>
-                            <DialogClose
-                              onClick={() => handleSaveLecture(index)}
+                      ))}
+                      <Dialog>
+                        <DialogTrigger>Add Lecture</DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>Adding Lecture</DialogHeader>
+                          <div>
+                            <label htmlFor="Ltitle" className="block mb-1">
+                              Lecture Title
+                            </label>
+                            <Input
+                              type="text"
+                              id="Ltitle"
+                              name="Ltitle"
+                              value={data.Ltitle}
+                              onChange={handler}
+                              className="outline-double w-4/5"
+                            />
+                          </div>
+                          <div>
+                            <label
+                              htmlFor="Ldescription"
+                              className="block mb-1"
                             >
-                              Save
-                            </DialogClose>
-                          </DialogContent>
-                        </Dialog>
-                      </CollapsibleContent>
-                    </Collapsible>
-                    <Button onClick={() => handleEditSection(index)}>
-                      Edit
-                    </Button>
-                    <Button onClick={() => handleDeleteSection(index)}>
-                      Delete
-                    </Button>
-                  </CardContent>
-                ))}
-
-                <CardContent>
-                  {step < 3 && step > 1 && (
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="h-11 w-20"
-                      onClick={() => setStep(step + 1)}
-                    >
-                      Next <ChevronRightIcon className="h-4 w-4" />
-                    </Button>
-                  )}
-
-                  {step === 3 && (
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="h-11 w-20"
-                      onClick={handleSubmit}
-                    >
-                      Submit
-                    </Button>
-                  )}
+                              Lecture Description
+                            </label>
+                            <textarea
+                              id="Ldescription"
+                              rows="4"
+                              name="Ldescription"
+                              value={data.Ldescription}
+                              onChange={handler}
+                              className="outline-double w-4/5"
+                            />
+                          </div>
+                          <div>
+                            <label className="block mb-1">Lecture Video</label>
+                            <CustomFileUploader
+                              name="file"
+                              types={fileTypes}
+                              className="outline-double w-4/5"
+                              handleChange={(file) => setVideo(file)}
+                            />
+                          </div>
+                          <DialogClose onClick={() => handleSaveLecture(index)}>
+                            Save
+                          </DialogClose>
+                        </DialogContent>
+                      </Dialog>
+                    </CollapsibleContent>
+                  </Collapsible>
+                  <Button onClick={() => handleEditSection(index)}>Edit</Button>
+                  <Button onClick={() => handleDeleteSection(index)}>
+                    Delete
+                  </Button>
                 </CardContent>
-                <div className="mt-16"></div>
-              </Card>
+              ))}
 
-              <EditLectureDialog
-                isOpen={isEditDialogOpen}
-                onClose={() => {
-                  setIsEditDialogOpen(false);
-                  setData({ ...data, Ltitle: "", Ldescription: "" });
-                }}
-                onSave={handleSaveEditedLecture}
-                lectureData={{
-                  Ltitle: data.Ltitle,
-                  Ldescription: data.Ldescription,
-                }}
-                onChange={handler}
-                fileTypes={fileTypes}
-                xyz={(file) => setVideo(file)}
-              />
-            </div>
+              <CardContent>
+                {step < 2 && step > 1 && (
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-11 w-20"
+                    onClick={() => setStep(step + 1)}
+                  >
+                    Next <ChevronRightIcon className="h-4 w-4" />
+                  </Button>
+                )}
+
+                {step === 2 && (
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-11 w-20"
+                    onClick={handleSubmit}
+                  >
+                    Submit
+                  </Button>
+                )}
+              </CardContent>
+              <div className="mt-16"></div>
+            </Card>
+
+            <EditLectureDialog
+              isOpen={isEditDialogOpen}
+              onClose={() => {
+                setIsEditDialogOpen(false);
+                setData({ ...data, Ltitle: "", Ldescription: "" });
+              }}
+              onSave={handleSaveEditedLecture}
+              lectureData={{
+                Ltitle: data.Ltitle,
+                Ldescription: data.Ldescription,
+              }}
+              onChange={handler}
+              fileTypes={fileTypes}
+              xyz={(file) => setVideo(file)}
+            />
           </ScrollArea>
+
+          <ToastContainer
+            position="top-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
         </div>
       </div>
     </div>

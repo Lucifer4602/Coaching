@@ -1,5 +1,5 @@
 const ratingAndReview = require("../models/ratingandreview");
-const User = require("../models/user");
+const user = require("../models/user");
 const course = require("../models/course");
 const mongo = require("mongoose");
 
@@ -25,12 +25,12 @@ exports.createRating = async (req, res) => {
       course: courseId,
     });
 
-    if (already_Review) {
-      return res.status(404).json({
-        success: false,
-        message: "bhai ek baar hi allowed h",
-      });
-    }
+    // if (already_Review === null) {
+    //   return res.status(404).json({
+    //     success: false,
+    //     message: "bhai ek baar hi allowed h",
+    //   });
+    // }
 
     const newRating = {
       rating,
@@ -61,15 +61,19 @@ exports.createRating = async (req, res) => {
 
 exports.getAvgRating = async (req, res) => {
   try {
-    const { courseId } = req.body;
+    const { courseId } = req.query;
 
-    const result = await ratingAndReview.aggregate({
-      $match: { course: new mongo.Types.ObjectId(courseId) },
-      $group: {
-        _id: null,
-        avgRating: { $avg: "$rating" },
+    const result = await ratingAndReview.aggregate([
+      {
+        $match: { course: new mongo.Types.ObjectId(courseId) },
       },
-    });
+      {
+        $group: {
+          _id: null,
+          avgRating: { $avg: "$rating" },
+        },
+      },
+    ]);
 
     if (result.length > 0) {
       return res.status(200).json({
@@ -78,15 +82,17 @@ exports.getAvgRating = async (req, res) => {
       });
     }
 
-    return res.status(401).json({
-      success: false,
-      message: "could not avg rating",
+    return res.status(200).json({
+      success: true,
+      message: "No ratings found for the course",
       avgRating: 0,
     });
   } catch (error) {
-    res.status(501).json({
+    console.error("Error in getAvgRating:", error);
+    res.status(500).json({
       success: false,
-      message: "could not find average of ratings",
+      message: "Could not find average rating",
+      error: error.message,
     });
   }
 };

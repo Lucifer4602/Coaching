@@ -138,14 +138,17 @@ export const Scomp1 = () => {
                 <label htmlFor="gender" className="font-bold">
                   Gender
                 </label>
-                <Input
-                  type="text"
-                  placeholder="Gender"
+                <select
                   id="gender"
                   name="gender"
                   value={data.gender}
                   onChange={handler}
-                />
+                  className="border rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select Gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
                 <label htmlFor="about" className="font-bold">
                   About
                 </label>

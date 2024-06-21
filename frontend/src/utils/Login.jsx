@@ -49,12 +49,11 @@ export const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-400 to-purple-500">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black ">
       <Navbar />
 
-      <div className="flex flex-col md:flex-row justify-center items-center h-full gap-32">
-        <div className="ml-36"></div>
-        <div className="md:w-1/2 lg:w-1/3 mt-8 md:mt-0 flex flex-col items-center ">
+      <div className="flex flex-col md:flex-row justify-center items-center h-full gap-8 px-6">
+        <div className="md:w-1/2 lg:w-1/3 mt-8 md:mt-0 flex flex-col items-center">
           <motion.div
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
@@ -92,7 +91,7 @@ export const Login = () => {
             />
             <label
               htmlFor="password"
-              className="text-gray-800 font-mono font-bold text-lg"
+              className="text-gray-800 font-mono font-bold text-lg mt-4"
             >
               Password<span className="text-red-600">*</span>
             </label>
@@ -111,28 +110,46 @@ export const Login = () => {
             <Button
               type="submit"
               variant="primary"
-              className="w-full text-white font-mono font-bold text-xl"
+              className="w-full font-mono font-bold text-xl"
             >
               Sign In
             </Button>
           </form>
-          <div className="mt-20 "></div>
         </div>
-
-        <div className="relative md:w-1/2 lg:w-2/3 mt-8 md:mt-0 hidden md:block ">
-          <div className="relative">
-            <img
-              src="https://static.student.com/storm-frontend-wp/uploads/2016/05/Study-Tips-and-Techniques-student-studyingV1.jpg"
-              width="440px"
-              className="relative mt-28 h-96 z-10"
-              alt="Study Tips"
-            />
-            <img
-              src="https://th.bing.com/th/id/OIP.QfVtbp3K9OYu_skQuNJi7AHaHa?rs=1&pid=ImgDetMain"
-              width="440px"
-              className="absolute top-3 left-3 h-96"
-              alt="Study Image"
-            />
+        <div className="relative md:w-1/2 lg:w-1/3 mt-8 md:mt-0 hidden md:block">
+          <div className="relative overflow-hidden w-full h-full">
+            <div className="relative overflow-hidden w-full h-96 md:h-full">
+              <video
+                className="absolute inset-0 w-full h-full object-cover z-10"
+                autoPlay
+                loop
+                muted
+              >
+                <source
+                  src="https://cdn.pixabay.com/video/2022/12/06/141858-778525394_tiny.mp4"
+                  type="video/mp4"
+                />
+              </video>
+              <div className="absolute inset-0 bg-black opacity-50 z-20"></div>
+              <div className="relative z-30 text-center text-white p-8">
+                <motion.div
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8 }}
+                  className="text-3xl md:text-4xl font-bold"
+                >
+                  Explore the World of Coding
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.3 }}
+                  className="text-lg md:text-xl mt-4"
+                >
+                  Join our community and start learning today.
+                </motion.div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -10,6 +10,7 @@ import { Pcomp2 } from "./ProfileComp/Pcomp2";
 import { Pnav } from "./ProfileComp/Pnav";
 import { update } from "@/redux/FormSlice";
 import { toast } from "react-toastify";
+import "../utils/Scroll.css";
 
 export const Profile = () => {
   const [loading, setLoading] = useState(true);
@@ -49,13 +50,13 @@ export const Profile = () => {
   }, [select?._id, authToken, dispatch, select?.hello]);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="h-screen w-screen overflow-hidden bg-gradient-to-b from-gray-900 to-black">
       <Navbar />
-      <Separator className="bg-slate-900" />
-      <div className="flex flex-1">
+      <Separator className="bg-slate-700" />
+      <div className="flex flex-row h-screen">
         <Pnav />
-        <div className="flex-1 bg-slate-900 p-4 overflow-auto">
-          <ScrollArea className="flex flex-col gap-5 items-center">
+        <div className="w-[100%] bg-gradient-to-b from-gray-900 to-black mx-auto">
+          <ScrollArea className="h-[100%] w-[100%] m-auto mt-10 mb-10 overflow-scroll overflow-x-hidden overflow-y-hidden">
             {loading ? (
               <p className="text-white text-lg">Loading...</p>
             ) : (
@@ -69,6 +70,7 @@ export const Profile = () => {
                 <div className="mt-8"></div>
               </>
             )}
+            <div className="mt-40"></div>
           </ScrollArea>
         </div>
       </div>

@@ -61,14 +61,16 @@ export const EnrolledCourses = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="h-screen w-screen overflow-hidden bg-gradient-to-b from-gray-900 to-black">
       <Navbar />
-      <Separator className="bg-slate-900" />
-      <div className="flex flex-row flex-grow overflow-hidden">
+      <Separator className="bg-slate-700" />
+      <div className="flex flex-row h-screen">
         <Pnav />
-        <div className="flex-grow bg-slate-900">
-          <ScrollArea className="h-full w-full overflow-auto p-6">
-            <div className="text-white text-2xl mb-6">Enrolled Courses</div>
+        <div className="w-[100%] bg-gradient-to-b from-gray-900 to-black mx-auto">
+          <ScrollArea className="h-[90%] w-[90%] m-auto mt-10 mb-10 overflow-scroll overflow-x-hidden scrollbar-hide">
+            <div className="text-white text-3xl font-bold mb-6">
+              Enrolled Courses
+            </div>
             {enrolled.map((item, index) => (
               <div
                 key={index}
@@ -76,7 +78,7 @@ export const EnrolledCourses = () => {
               >
                 <Button
                   variant="outline"
-                  className="flex items-start w-full p-4 bg-transparent border-none cursor-pointer h-full"
+                  className="flex items-start w-full p-4 bg-transparent border-none cursor-pointer h-full hover:bg-gray-700"
                   onClick={() => handler(item)}
                 >
                   <img
@@ -98,6 +100,7 @@ export const EnrolledCourses = () => {
                 </Button>
               </div>
             ))}
+            <div className="mt-36"></div>
           </ScrollArea>
         </div>
       </div>

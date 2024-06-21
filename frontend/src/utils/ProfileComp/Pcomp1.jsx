@@ -10,7 +10,7 @@ export const Pcomp1 = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col gap-6 px-4 lg:px-8 xl:px-12">
+    <div className="flex flex-col gap-6 px-4 lg:px-8 xl:px-12 overflow-scroll overflow-x-hidden overflow-y-hidden">
       {/* Adjusted padding for different screen sizes */}
       <Card>
         <div className="my-6 lg:my-10">
@@ -19,9 +19,11 @@ export const Pcomp1 = () => {
         <div className="flex flex-col lg:flex-row lg:flex-wrap lg:gap-6">
           {/* About Section */}
           <CardContent className="flex-1">
-            <p className="font-semibold">About</p>
+            <p className="font-bold text-2xl mb-3">About</p>
             <p>{value?.additional?.about || "Tell us about yourself"}</p>
-            <p className="mt-4">Account Type: {value?.role}</p>
+            <p className="mt-4 ">
+              <span className="font-bold">Account Type:</span> {value?.role}
+            </p>
           </CardContent>
 
           <div className="lg:hidden">

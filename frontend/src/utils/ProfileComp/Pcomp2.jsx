@@ -10,18 +10,15 @@ export const Pcomp2 = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col gap-6 px-4 lg:px-8 xl:px-12 ">
+    <div className="flex flex-col gap-6 px-4 lg:px-8 xl:px-12 overflow-scroll overflow-x-hidden overflow-y-hidden">
       <Card>
         <div className="my-6 lg:my-10">
-          <h2 className="text-lg font-semibold ml-10">Personal Details</h2>
-          {/* Vertical margin adjustment */}
+          <h2 className="text-2xl font-bold ml-6">Personal Details</h2>
         </div>
         <div className="flex flex-col lg:flex-row lg:flex-wrap lg:gap-6">
           {/* Personal Details Section */}
 
           <div className="bg-gray-100 lg:bg-transparent flex-1 p-4 lg:p-0">
-            {/* Added background color and padding */}
-
             <CardContent>
               <p className="font-semibold">First Name</p>
               <p>{value?.firstName || "N/A"}</p>

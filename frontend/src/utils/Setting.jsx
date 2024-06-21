@@ -68,12 +68,12 @@ export const Setting = () => {
   }, [select._id, authToken, dispatch]);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-900 to-black">
       <Navbar />
-      <Separator className="bg-slate-900" />
+      <Separator className="bg-slate-700" />
       <div className="flex flex-1">
         <Pnav />
-        <div className="flex-1 bg-slate-900 p-4 overflow-auto">
+        <div className="flex-1 bg-gradient-to-b from-gray-900 to-black p-4 overflow-auto">
           <ScrollArea className="flex flex-col gap-5 items-center">
             {loading ? (
               <p className="text-white text-lg">Loading...</p>

@@ -59,8 +59,8 @@ router.get("/search", searchCourses); //done
 
 router.post("/updateCourseProgress", auth, isStudent, updateCourseProgress);
 
-router.post("/createRating", createRating);
-router.get("/getAverageRating", getAvgRating);
-router.get("/getReviews", totalRating);
+router.post("/createRating", createRating); //done
+router.get("/getAverageRating", getAvgRating); //done
+router.get("/getReviews", totalRating); //done
 
 module.exports = router;

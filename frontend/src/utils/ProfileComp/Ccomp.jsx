@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
@@ -8,8 +10,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-import { FileUploader } from "react-drag-drop-files";
 import { Button } from "@/components/ui/button";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import {
@@ -20,66 +20,15 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
-  DialogHeader,
   DialogTrigger,
+  DialogHeader,
 } from "@/components/ui/dialog";
 import { DialogClose } from "@radix-ui/react-dialog";
 import axios from "axios";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-
-const EditLectureDialog = ({
-  isOpen,
-  onClose,
-  onSave,
-  lectureData,
-  onChange,
-  fileTypes,
-  xyz,
-}) => (
-  <Dialog open={isOpen} onOpenChange={onClose}>
-    <DialogContent>
-      <DialogHeader>Editing Lecture</DialogHeader>
-      <div>
-        <label htmlFor="editLtitle">Lecture Title</label>
-        <Input
-          type="text"
-          id="editLtitle"
-          name="Ltitle"
-          value={lectureData.Ltitle}
-          onChange={onChange}
-        />
-      </div>
-      <div>
-        <label htmlFor="editLdescription">Lecture Description</label>
-        <textarea
-          id="editLdescription"
-          rows="4"
-          cols="50"
-          name="Ldescription"
-          value={lectureData.Ldescription}
-          onChange={onChange}
-        />
-      </div>
-      <div>
-        <label>Lecture video</label>
-        <FileUploader
-          name="file"
-          types={fileTypes}
-          className="outline-double"
-          handleChange={xyz}
-        />
-      </div>
-      <DialogFooter>
-        <Button onClick={onSave}>Save</Button>
-        <Button variant="ghost" onClick={onClose}>
-          Cancel
-        </Button>
-      </DialogFooter>
-    </DialogContent>
-  </Dialog>
-);
+import { EditLectureDialog } from "./EditLectureDialog";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import CustomFileUploader from "./CustomFileUploader";
 
 export const Ccomp = () => {
   const select = useSelector((state) => state?.form?.FormData);
@@ -142,9 +91,6 @@ export const Ccomp = () => {
     if (editingSection !== null) {
       const updatedSections = [...sections];
       updatedSections[editingSection] = data.section;
-      // console.log(data.section);
-      // console.log(course_id);
-      // console.log(sectionId[editingSection]);
 
       try {
         const formData = new FormData();
@@ -162,10 +108,11 @@ export const Ccomp = () => {
           }
         );
         setSections(updatedSections);
-
         setEditingSection(null);
+        toast.success("Section updated successfully!");
       } catch (err) {
         console.error(err);
+        toast.error("Failed to update section!");
       }
     } else {
       setSections((prevSections) => [...prevSections, data.section]);
@@ -185,8 +132,10 @@ export const Ccomp = () => {
         );
         const sec = response.data.newSection._id;
         setSectionId((prev) => [...prev, sec]);
+        toast.success("Section created successfully!");
       } catch (err) {
         console.error(err);
+        toast.error("Failed to create section!");
       }
     }
     setData({ ...data, section: "" });
@@ -212,13 +161,14 @@ export const Ccomp = () => {
           },
         }
       );
-      console.log(response.data);
       setSections((prevSections) => prevSections.filter((_, i) => i !== index));
       setSectionId((prevSectionId) =>
         prevSectionId.filter((_, i) => i !== index)
       );
+      toast.success("Section deleted successfully!");
     } catch (error) {
       console.error(error);
+      toast.error("Failed to delete section!");
     }
   };
 
@@ -250,14 +200,12 @@ export const Ccomp = () => {
           },
         }
       );
-      // console.log(response.data);
       const newsubsectionId = {
         _id: response.data.updatedSection.subsection[
           response.data.updatedSection.subsection.length - 1
         ]._id,
       };
 
-      // console.log(newsubsectionId);
       const values = [...subsectionId];
 
       if (Array.isArray(values[activeSection])) {
@@ -267,8 +215,10 @@ export const Ccomp = () => {
       }
 
       setSubsectionId(values);
+      toast.success("Lecture added successfully!");
     } catch (err) {
       console.error(err);
+      toast.error("Failed to add lecture!");
     }
     setLectures(updatedLectures);
     setData({ ...data, Ltitle: "", Ldescription: "" });
@@ -289,11 +239,7 @@ export const Ccomp = () => {
   const handleDeleteLecture = async (sectionIndex, lectureIndex) => {
     try {
       const updatedLectures = [...lectures];
-
-      const updates = [...subsectionId];
-      const y = updates[sectionIndex][lectureIndex]._id;
-      // console.log(y);
-      // console.log(sectionId[sectionIndex]);
+      const y = subsectionId[sectionIndex][lectureIndex]._id;
 
       await axios.delete(
         `http://localhost:3000/api/v1/course/deleteSubSection`,
@@ -310,10 +256,13 @@ export const Ccomp = () => {
       );
       updatedLectures[sectionIndex].splice(lectureIndex, 1);
       setLectures(updatedLectures);
+      const updates = [...subsectionId];
       updates[sectionIndex].splice(lectureIndex, 1);
       setSubsectionId(updates);
+      toast.success("Lecture deleted successfully!");
     } catch (error) {
       console.error(error);
+      toast.error("Failed to delete lecture!");
     }
   };
 
@@ -333,9 +282,6 @@ export const Ccomp = () => {
       formData.append("body", data.Ldescription);
       formData.append("duration", "23");
       formData.append("videoFile", video);
-      console.log(
-        subsectionId[editingLectureSectionIndex][editingLectureIndex]
-      );
 
       const response = await axios.put(
         `http://localhost:3000/api/v1/course/updateSubSection`,
@@ -348,12 +294,15 @@ export const Ccomp = () => {
         }
       );
 
-      setLectures(updatedLectures);
-      setIsEditDialogOpen(false);
-      setData({ ...data, Ltitle: "", Ldescription: "" });
+      setSubsectionId(response.data.updateSubSection._id);
+      toast.success("Lecture updated successfully!");
     } catch (error) {
       console.error(error);
+      toast.error("Failed to update lecture!");
     }
+    setLectures(updatedLectures);
+    setData({ ...data, Ltitle: "", Ldescription: "" });
+    setIsEditDialogOpen(false);
   };
 
   const saveHandler = async () => {
@@ -380,61 +329,68 @@ export const Ccomp = () => {
       );
       const courseId = response.data.data._id;
       setCourseId(courseId);
+      toast.success("Course created successfully!");
     } catch (error) {
       console.error(error);
+      toast.error("Failed to create course!");
     }
     setStep(step + 1);
   };
 
   return (
-    <div className="overflow-scroll">
-      <div>Add a Course</div>
+    <div className="overflow-scroll overflow-x-hidden overflow-y-hidden ">
+      <div className="text-xl font-bold mb-4">Add a Course</div>
 
-      <Card>
-        <CardContent style={{ display: step === 1 ? "block" : "none" }}>
-          <label htmlFor="title">Course Title</label>
+      <Card className="w-4/5 mx-auto">
+        <CardContent className={step === 1 ? "block" : "hidden"}>
+          <label htmlFor="title" className="block mb-1">
+            Course Title
+          </label>
           <Input
             type="text"
-            placeholder="Enter course title"
             id="title"
             name="title"
             value={data.title}
             onChange={handler}
-            className="outline-double"
+            className="outline-double w-4/5"
+            placeholder="Enter course title"
           />
         </CardContent>
 
-        <CardContent style={{ display: step === 1 ? "block" : "none" }}>
-          <label htmlFor="description">Course Description</label>
-          <div>
-            <textarea
-              rows="4"
-              cols="67"
-              placeholder="Enter course description"
-              id="description"
-              name="description"
-              value={data.description}
-              onChange={handler}
-              className="outline-double"
-            />
-          </div>
+        <CardContent className={step === 1 ? "block" : "hidden"}>
+          <label htmlFor="description" className="block mb-1">
+            Course Description
+          </label>
+          <textarea
+            rows="4"
+            id="description"
+            name="description"
+            value={data.description}
+            onChange={handler}
+            className="outline-double w-4/5"
+            placeholder="Enter course description"
+          />
         </CardContent>
 
-        <CardContent style={{ display: step === 1 ? "block" : "none" }}>
-          <label htmlFor="price">Course Price</label>
+        <CardContent className={step === 1 ? "block" : "hidden"}>
+          <label htmlFor="price" className="block mb-1">
+            Course Price
+          </label>
           <Input
             type="text"
-            placeholder="Enter course price"
             id="price"
             name="price"
             value={data.price}
             onChange={handler}
-            className="outline-double"
+            className="outline-double w-4/5"
+            placeholder="Enter course price"
           />
         </CardContent>
 
-        <CardContent style={{ display: step === 1 ? "block" : "none" }}>
-          <label htmlFor="level">Course level</label>
+        <CardContent className={step === 1 ? "block" : "hidden"}>
+          <label htmlFor="level" className="block mb-1">
+            Course Level
+          </label>
           <Select
             onValueChange={(value) =>
               setData((prev) => ({ ...prev, level: value }))
@@ -452,8 +408,10 @@ export const Ccomp = () => {
           </Select>
         </CardContent>
 
-        <CardContent style={{ display: step === 1 ? "block" : "none" }}>
-          <label htmlFor="language">Course language</label>
+        <CardContent className={step === 1 ? "block" : "hidden"}>
+          <label htmlFor="language" className="block mb-1">
+            Course Language
+          </label>
           <Select
             onValueChange={(value) =>
               setData((prev) => ({ ...prev, language: value }))
@@ -463,77 +421,80 @@ export const Ccomp = () => {
               <SelectValue placeholder="Choose a language" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="hindi">hindi</SelectItem>
-              <SelectItem value="english">english</SelectItem>
+              <SelectItem value="hindi">Hindi</SelectItem>
+              <SelectItem value="english">English</SelectItem>
             </SelectContent>
           </Select>
         </CardContent>
 
-        <CardContent style={{ display: step === 1 ? "block" : "none" }}>
-          <label htmlFor="tag">Tags</label>
+        <CardContent className={step === 1 ? "block" : "hidden"}>
+          <label htmlFor="tag" className="block mb-1">
+            Tags
+          </label>
           <Input
             type="text"
-            placeholder="Enter category"
             id="tag"
             name="tag"
             value={data.tag}
             onChange={handler}
-            className="outline-double"
+            className="outline-double w-4/5"
+            placeholder="Enter category"
           />
         </CardContent>
 
-        <CardContent style={{ display: step === 1 ? "block" : "none" }}>
-          <label>Course Thumbnail</label>
-          <FileUploader
+        <CardContent className={step === 1 ? "block " : "hidden"}>
+          <label className="block mb-1">Course Thumbnail</label>
+          <CustomFileUploader
             name="file"
             types={fileTypes}
-            className="outline-double"
+            className="outline-double w-4/5"
             handleChange={handleFileChange}
           />
         </CardContent>
 
-        <CardContent style={{ display: step === 1 ? "block" : "none" }}>
-          <label htmlFor="benefits">Course Benefits</label>
-          <div>
-            <textarea
-              rows="4"
-              cols="67"
-              placeholder="Enter course benefits"
-              id="benefits"
-              name="benefits"
-              value={data.benefits}
-              onChange={handler}
-              className="outline-double"
-            />
-          </div>
+        <CardContent className={step === 1 ? "block" : "hidden"}>
+          <label htmlFor="benefits" className="block mb-1">
+            Course Benefits
+          </label>
+          <textarea
+            rows="4"
+            id="benefits"
+            name="benefits"
+            value={data.benefits}
+            onChange={handler}
+            className="outline-double w-4/5"
+            placeholder="Enter course benefits"
+          />
         </CardContent>
 
-        <CardContent style={{ display: step === 1 ? "block" : "none" }}>
+        <CardContent className={step === 1 ? "block" : "hidden"}>
           <Button
             variant="outline"
             size="icon"
             className="h-11 w-20"
             onClick={saveHandler}
           >
-            Save
-            <ChevronRightIcon className="h-4 w-4" />
+            Save <ChevronRightIcon className="h-4 w-4" />
           </Button>
         </CardContent>
 
-        <CardContent style={{ display: step === 2 ? "block" : "none" }}>
+        <CardContent className={step === 2 ? "block" : "hidden"}>
           Course Builder
         </CardContent>
-        <CardContent style={{ display: step === 2 ? "block" : "none" }}>
+
+        <CardContent className={step === 2 ? "block" : "hidden"}>
           <div className="border-gray-950 border-2 p-4">
-            <label htmlFor="section">Section Name</label>
+            <label htmlFor="section" className="block mb-1">
+              Section Name
+            </label>
             <Input
               type="text"
-              placeholder="Enter section name"
               id="section"
               name="section"
               value={data.section}
               onChange={handler}
-              className="outline-double"
+              className="outline-double w-4/5"
+              placeholder="Enter section name"
             />
             <Button onClick={handleCreateSection}>
               {editingSection !== null ? "Update Section" : "Add Section"}
@@ -544,13 +505,12 @@ export const Ccomp = () => {
         {sections.map((section, index) => (
           <CardContent
             key={index}
-            className="flex flex-row"
-            style={{ display: step === 2 ? "block" : "none" }}
+            className={step === 2 ? "flex flex-row" : "hidden"}
           >
             <Collapsible>
               <CollapsibleTrigger>
                 <div
-                  className="flex flex-row"
+                  className="flex flex-row cursor-pointer"
                   onClick={() => setActiveSection(index)}
                 >
                   <div>{section}</div>
@@ -558,7 +518,7 @@ export const Ccomp = () => {
               </CollapsibleTrigger>
               <CollapsibleContent>
                 {(lectures[index] || []).map((lecture, lectureIndex) => (
-                  <div key={lectureIndex}>
+                  <div key={lectureIndex} className="flex flex-row">
                     <div>{lecture.Ltitle}</div>
                     <Button
                       onClick={() => handleEditLecture(index, lectureIndex)}
@@ -576,33 +536,38 @@ export const Ccomp = () => {
                   <DialogTrigger>Add Lecture</DialogTrigger>
                   <DialogContent>
                     <DialogHeader>Adding Lecture</DialogHeader>
-                    <div>
-                      <label htmlFor="Ltitle">Lecture Title</label>
+                    <div className="mb-2">
+                      <label htmlFor="Ltitle" className="block mb-1">
+                        Lecture Title
+                      </label>
                       <Input
                         type="text"
                         id="Ltitle"
                         name="Ltitle"
+                        className="w-4/5"
                         value={data.Ltitle}
                         onChange={handler}
                       />
                     </div>
-                    <div>
-                      <label htmlFor="Ldescription">Lecture Description</label>
+                    <div className="mb-2">
+                      <label htmlFor="Ldescription" className="block mb-1">
+                        Lecture Description
+                      </label>
                       <textarea
                         id="Ldescription"
                         rows="4"
-                        cols="50"
                         name="Ldescription"
+                        className="outline-double w-4/5"
                         value={data.Ldescription}
                         onChange={handler}
                       />
                     </div>
-                    <div>
-                      <label>Lecture video</label>
-                      <FileUploader
+                    <div className="mb-2">
+                      <label className="block mb-1">Lecture Video</label>
+                      <CustomFileUploader
                         name="file"
                         types={fileTypes}
-                        className="outline-double"
+                        className="outline-double w-4/5"
                         handleChange={(file) => setVideo(file)}
                       />
                     </div>
@@ -619,7 +584,7 @@ export const Ccomp = () => {
         ))}
 
         <CardContent>
-          {step < 3 && step > 1 && (
+          {step < 2 && step > 1 && (
             <Button
               variant="outline"
               size="icon"
@@ -630,7 +595,7 @@ export const Ccomp = () => {
             </Button>
           )}
 
-          {step === 3 && (
+          {step === 2 && (
             <Button
               variant="outline"
               size="icon"
@@ -656,6 +621,20 @@ export const Ccomp = () => {
         fileTypes={fileTypes}
         xyz={(file) => setVideo(file)}
       />
+
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+
+      <div className="mt-24"></div>
     </div>
   );
 };

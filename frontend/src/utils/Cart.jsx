@@ -8,13 +8,16 @@ import { useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 export const Cart = () => {
   const select = useSelector((state) => state?.form?.FormData);
   const authToken = select?.authToken;
+  const navigate = useNavigate();
 
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [ratings, setRatings] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,6 +43,25 @@ export const Cart = () => {
       fetchData();
     }
   }, [select?._id, authToken]);
+
+  const fetchAverageRating = async (courseId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/api/v1/course/getAverageRating`,
+        {
+          params: { courseId: courseId },
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data.avgRating;
+    } catch (error) {
+      console.error("Error fetching average rating:", error);
+      return 0;
+    }
+  };
 
   const handleRemoveFromCart = async (itemId) => {
     try {
@@ -104,7 +126,7 @@ export const Cart = () => {
           },
         }
       );
-      console.log(response);
+      // console.log(response);
       toast.success("Successfully enrolled!");
 
       const updatedCartItems = cartItems.filter((item) => item._id !== itemId);
@@ -124,16 +146,65 @@ export const Cart = () => {
     0
   );
 
+  useEffect(() => {
+    // Fetch average ratings for all cart items
+    const fetchRatings = async () => {
+      for (const item of cartItems) {
+        const rating = await fetchAverageRating(item._id);
+        setRatings((prevRatings) => ({
+          ...prevRatings,
+          [item._id]: rating,
+        }));
+      }
+    };
+
+    if (cartItems.length > 0) {
+      fetchRatings();
+    }
+  }, [cartItems]);
+
+  const renderStarRating = (itemId) => {
+    if (ratings[itemId] === undefined) {
+      return <div>Loading...</div>; // or any other loading indicator
+    }
+
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      if (i <= ratings[itemId]) {
+        stars.push(
+          <span key={i} className="text-yellow-500">
+            ★
+          </span>
+        );
+      } else {
+        stars.push(
+          <span key={i} className="text-gray-300">
+            ★
+          </span>
+        );
+      }
+    }
+    return stars;
+  };
+
+  const handleCardClick = (item) => {
+    // Navigate to course details if needed
+    // dispatch(update({ ...select, c_id: item._id }));
+    // navigate("/CourseDetails");
+  };
+
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-b from-slate-900 to-slate-800">
-      <Navbar className="sticky top-0 left-0 right-0 z-10" />
-      <Separator className="bg-slate-900" />
-      <div className="flex flex-1">
-        <Pnav className="w-48 bg-slate-900 min-h-screen sticky top-0" />
-        <div className="flex-1 bg-slate-900 overflow-hidden">
-          <ScrollArea className="h-full overflow-y-auto">
+    <div className="h-screen w-screen overflow-hidden bg-gradient-to-b from-gray-900 to-black">
+      <Navbar />
+      <Separator className="bg-slate-700" />
+      <div className="flex flex-row h-screen">
+        <Pnav />
+        <div className="w-[100%] bg-gradient-to-b from-gray-900 to-black mx-auto">
+          <ScrollArea className="h-[90%] w-[90%] m-auto mt-10 mb-10 overflow-scroll overflow-x-hidden scrollbar-hide">
             <div className="p-4">
-              <div className="text-white text-lg mb-4">Your Cart</div>
+              <div className="text-white text-3xl font-bold mb-4">
+                Your Cart
+              </div>
               {loading ? (
                 <div className="text-white">Loading...</div>
               ) : cartItems.length > 0 ? (
@@ -141,38 +212,44 @@ export const Cart = () => {
                   {cartItems.map((item) => (
                     <div
                       key={item._id}
-                      className="bg-white p-4 rounded-lg shadow-md"
+                      className="bg-transparent rounded-lg shadow-md p-4 relative hover:bg-gray-800 transition duration-300 ease-in-out cursor-pointer"
+                      onClick={() => handleCardClick(item)}
                     >
                       <img
                         src={item.thumbnail}
                         alt="Course Thumbnail"
                         className="h-40 w-full object-cover rounded-lg mb-2"
                       />
-                      <div className="font-semibold text-lg mb-2">
+                      <div className="font-semibold text-lg mb-2 text-white">
                         {item.courseName}
                       </div>
-                      <div className="text-gray-600">
+                      <div className="text-gray-400">
                         {item.instructor.firstName} {item.instructor.lastName}
                       </div>
-                      <div className="text-gray-600 mt-2">
-                        {item.ratingAndReview.length} Ratings
+                      <div className="text-gray-400 mt-2">
+                        {renderStarRating(item._id)}
+                        {"  "}
+                        {item.ratingAndReview.length}
+                        {" Ratings"}
                       </div>
-                      <div className="font-semibold mt-2">₹{item.price}</div>
+                      <div className="font-semibold mt-2 text-white">
+                        ₹{item.price}
+                      </div>
                       <div className="flex flex-col justify-end mt-4 gap-3">
                         <Button
-                          className="px-4 py-2 sm:px-6 sm:py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                          className="px-4 py-2 sm:px-6 sm:py-3 bg-neon-gray-500 text-white rounded-md hover:bg-neon-gray-600 transition duration-300 focus:outline-none focus:ring-2 focus:ring-neon-gray-400"
                           onClick={() => handleMoveToWishlist(item._id)}
                         >
                           Save for Later
                         </Button>
                         <Button
-                          className="px-4 py-2 sm:px-6 sm:py-3 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400"
+                          className="px-4 py-2 sm:px-6 sm:py-3 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-300 focus:outline-none focus:ring-2 focus:ring-red-400"
                           onClick={() => handleRemoveFromCart(item._id)}
                         >
                           Remove from Cart
                         </Button>
                         <Button
-                          className="px-4 py-2 sm:px-6 sm:py-3 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400"
+                          className="px-4 py-2 sm:px-6 sm:py-3 bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-300 focus:outline-none focus:ring-2 focus:ring-green-400"
                           onClick={() => courseHandler(item._id)}
                         >
                           Buy
@@ -194,6 +271,7 @@ export const Cart = () => {
                 </div>
               )}
             </div>
+            <div className="mt-36"></div>
           </ScrollArea>
         </div>
       </div>

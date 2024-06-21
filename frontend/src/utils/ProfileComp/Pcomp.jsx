@@ -11,7 +11,7 @@ export const Pcomp = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col gap-6 justify-around items-center px-4 lg:px-8 xl:px-12">
+    <div className="flex flex-col gap-6 justify-around items-center px-4 lg:px-8 xl:px-12 overflow-scroll overflow-x-hidden overflow-y-hidden">
       <div className="font-bold text-4xl text-white">My Profile</div>
 
       <Card className="w-full lg:w-[calc(100% - 40px)] xl:w-[calc(100% - 80px)]">
@@ -27,7 +27,7 @@ export const Pcomp = () => {
 
           <div className="flex-1 mt-4 lg:mt-0 lg:flex lg:flex-col lg:gap-2">
             <CardContent>
-              <p className="font-semibold">{name}</p>
+              <p className="font-semibold text-3xl">{name}</p>
               <p>{value?.email}</p>
             </CardContent>
           </div>

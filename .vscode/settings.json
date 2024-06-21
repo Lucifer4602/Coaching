@@ -4,5 +4,6 @@
     "deque": "cpp",
     "string": "cpp",
     "vector": "cpp"
-  }
+  },
+  "git.ignoreLimitWarning": true
 }

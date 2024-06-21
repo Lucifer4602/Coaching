@@ -31,6 +31,7 @@ export const ViewCourse = () => {
   const handleReviewSubmit = async () => {
     try {
       const x = rating.toString();
+      console.log(x, review, enrolledCourse._id, select._id);
       const response = await axios.post(
         "http://localhost:3000/api/v1/course/createRating",
         {
@@ -54,11 +55,11 @@ export const ViewCourse = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen bg-gradient-to-b from-gray-900 to-black">
       <Navbar />
-      <Separator className="bg-slate-900" />
+      <Separator className="bg-slate-700" />
       <div className="flex flex-1">
-        <div className="w-full md:w-1/4 bg-slate-900 overflow-hidden">
+        <div className="w-full md:w-1/4 bg-gradient-to-b from-gray-900 to-black overflow-hidden">
           <ScrollArea className="h-full overflow-y-auto">
             <div className="mx-4">
               <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-20">

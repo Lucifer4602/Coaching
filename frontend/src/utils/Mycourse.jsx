@@ -17,6 +17,7 @@ export const Mycourse = () => {
   const formData = useSelector((state) => state?.form?.FormData);
   const authToken = formData?.authToken;
   const dispatch = useDispatch();
+  const [coursesFetched, setCoursesFetched] = useState(false); // State to track if courses have been fetched
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -32,7 +33,7 @@ export const Mycourse = () => {
           }
         );
         setCourses(response.data.data);
-        toast.success("Courses fetched successfully");
+        setCoursesFetched(true);
       } catch (error) {
         console.error("Error fetching courses:", error);
         toast.error("Error fetching courses");
@@ -43,6 +44,12 @@ export const Mycourse = () => {
       fetchCourses();
     }
   }, [authToken, formData?._id]);
+
+  useEffect(() => {
+    if (coursesFetched) {
+      toast.success("Courses fetched successfully");
+    }
+  }, [coursesFetched]);
 
   const formatTimestamp = (timestamp) => {
     const date = new Date(timestamp);
@@ -91,23 +98,25 @@ export const Mycourse = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen bg-gradient-to-b from-gray-900 to-black">
       <Navbar />
       <Separator className="bg-slate-900" />
       <div className="flex flex-1 flex-row h-full">
         <Pnav />
-        <div className="flex-1 bg-slate-900 p-4">
+        <div className="flex-1 bg-gradient-to-b from-gray-900 to-black p-4">
           <div className="flex justify-between items-center mb-4">
-            <div className="text-white text-xl font-bold">My Courses</div>
-            <Button onClick={() => navigate("/add-course")}>Add Course</Button>
+            <div className="text-white text-4xl font-bold">My Courses</div>
+            <Button onClick={() => navigate("/add-course")} variant="outline">
+              Add Course
+            </Button>
           </div>
-          <ScrollArea className="h-[70vh] overflow-y-auto p-4">
+          <ScrollArea className="h-[70vh] overflow-y-auto p-4 scrollbar-hide">
             {courses.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {courses.map((course) => (
                   <div
                     key={course._id}
-                    className="bg-gray-800 p-4 mb-4 rounded-lg"
+                    className="bg-gray-800 p-4 mb-4 rounded-lg hover:bg-gray-700 transition duration-300"
                   >
                     <img
                       src={course.thumbnail}
@@ -143,7 +152,7 @@ export const Mycourse = () => {
           </ScrollArea>
         </div>
       </div>
-      <ToastContainer />
+      <ToastContainer limit={1} />
     </div>
   );
 };

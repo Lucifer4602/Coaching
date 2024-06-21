@@ -7,6 +7,7 @@ import axios from "axios";
 export const Card1 = ({ tag, value }) => {
   const select = useSelector((state) => state?.form?.FormData);
   const form = useSelector((state) => state?.form?.FormData?.courses);
+  console.log(form);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [ratings, setRatings] = useState({});

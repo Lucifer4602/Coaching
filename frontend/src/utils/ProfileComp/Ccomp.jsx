@@ -310,11 +310,12 @@ export const Ccomp = () => {
 
   const saveHandler = async () => {
     try {
+      console.log(data);
       const formData = new FormData();
       formData.append("courseName", data.title);
       formData.append("courseDescription", data.description);
       formData.append("whatIsThis", data.benefits);
-      formData.append("tag", "666db07fdbe97a8ec048bed7");
+      formData.append("tag", data.tag);
       formData.append("price", data.price);
       if (thumbnail) {
         formData.append("thumbnailImage", thumbnail);
@@ -454,15 +455,29 @@ export const Ccomp = () => {
           >
             Tags<span className="text-red-600">*</span>
           </label>
-          <Input
-            type="text"
-            id="tag"
-            name="tag"
-            value={data.tag}
-            onChange={handler}
-            className="border-2 rounded-md px-3 py-2 w-full focus:outline-none focus:border-blue-500"
-            placeholder="Enter category"
-          />
+
+          <Select
+            onValueChange={(value) =>
+              setData((prev) => ({ ...prev, tag: value }))
+            }
+            className="w-[180px] border-2 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Choose tag" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="666db073dbe97a8ec048bed4">
+                Web development
+              </SelectItem>
+              <SelectItem value="666db07fdbe97a8ec048bed7">
+                Android development
+              </SelectItem>
+              <SelectItem value="666db090dbe97a8ec048bed9">Devops</SelectItem>
+              <SelectItem value="666db0a0dbe97a8ec048bedb">
+                Blockchain
+              </SelectItem>
+            </SelectContent>
+          </Select>
         </CardContent>
 
         <CardContent className={step === 1 ? "block" : "hidden"}>

@@ -27,9 +27,7 @@ const allowedOrigins = [
   "https://tech-flix-api.vercel.app/",
 ];
 
-app.get("/", (req, res) => {
-  res.json("done");
-});
+
 // Enable CORS for specific origins
 app.use(
   cors({

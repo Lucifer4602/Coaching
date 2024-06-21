@@ -64,14 +64,14 @@ export const VerifyOtp = () => {
             A verification code has been sent to you. Enter the code below
           </div>
           <div className="mt-6 w-full max-w-xs md:max-w-md">
-            <div className="flex justify-center">
+            <div className="flex justify-center text-white">
               <InputOTP
                 maxLength={6}
                 value={otp}
                 onChange={(value) => {
                   setOtp(value);
                 }}
-                className="w-full max-w-xs md:max-w-md"
+                className="w-full max-w-xs md:max-w-md text-white"
               >
                 <InputOTPGroup>
                   <InputOTPSlot index={0} />

@@ -22,6 +22,7 @@ const { contactUs } = require("./controllers/contactUs");
 app.use(express.json());
 app.use(cookieParser());
 
+<<<<<<< HEAD
 app.get("/", (req, res) => {
   res.json("done");
 });
@@ -34,6 +35,21 @@ const corsConfig = {
 app.options("", cors(corsConfig));
 
 app.use(cors(corsConfig));
+=======
+
+// Enable CORS for specific origins
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+  })
+);
+>>>>>>> origin
 
 app.use(
   fileUpload({

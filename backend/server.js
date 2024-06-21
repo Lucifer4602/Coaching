@@ -21,8 +21,15 @@ const { contactUs } = require("./controllers/contactUs");
 
 app.use(express.json());
 app.use(cookieParser());
-const allowedOrigins = ["http://localhost:3000", "http://localhost:5173"];
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:5173",
+  "https://tech-flix-api.vercel.app/",
+];
 
+app.get("/", (req, res) => {
+  res.json("done");
+});
 // Enable CORS for specific origins
 app.use(
   cors({

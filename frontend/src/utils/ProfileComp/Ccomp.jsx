@@ -29,6 +29,9 @@ import { EditLectureDialog } from "./EditLectureDialog";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CustomFileUploader from "./CustomFileUploader";
+import { MdDeleteOutline } from "react-icons/md";
+import { FaList } from "react-icons/fa";
+import { AiOutlineEdit } from "react-icons/ai";
 
 export const Ccomp = () => {
   const select = useSelector((state) => state?.form?.FormData);
@@ -338,13 +341,16 @@ export const Ccomp = () => {
   };
 
   return (
-    <div className="overflow-scroll overflow-x-hidden overflow-y-hidden ">
-      <div className="text-xl font-bold mb-4">Add a Course</div>
+    <div className="overflow-scroll overflow-x-hidden overflow-y-hidden">
+      <div className="font-bold text-4xl text-white mb-6">Add a Course</div>
 
       <Card className="w-4/5 mx-auto">
         <CardContent className={step === 1 ? "block" : "hidden"}>
-          <label htmlFor="title" className="block mb-1">
-            Course Title
+          <label
+            htmlFor="title"
+            className="text-gray-800 font-mono font-bold text-lg mb-1"
+          >
+            Course Title<span className="text-red-600">*</span>
           </label>
           <Input
             type="text"
@@ -352,14 +358,17 @@ export const Ccomp = () => {
             name="title"
             value={data.title}
             onChange={handler}
-            className="outline-double w-4/5"
+            className="border-2 rounded-md px-3 py-2 w-full focus:outline-none focus:border-blue-500"
             placeholder="Enter course title"
           />
         </CardContent>
 
         <CardContent className={step === 1 ? "block" : "hidden"}>
-          <label htmlFor="description" className="block mb-1">
-            Course Description
+          <label
+            htmlFor="description"
+            className="text-gray-800 font-mono font-bold text-lg mb-1"
+          >
+            Course Description<span className="text-red-600">*</span>
           </label>
           <textarea
             rows="4"
@@ -367,14 +376,17 @@ export const Ccomp = () => {
             name="description"
             value={data.description}
             onChange={handler}
-            className="outline-double w-4/5"
+            className="border-2 rounded-md px-3 py-2 w-full focus:outline-none focus:border-blue-500"
             placeholder="Enter course description"
           />
         </CardContent>
 
         <CardContent className={step === 1 ? "block" : "hidden"}>
-          <label htmlFor="price" className="block mb-1">
-            Course Price
+          <label
+            htmlFor="price"
+            className="text-gray-800 font-mono font-bold text-lg mb-1"
+          >
+            Course Price<span className="text-red-600">*</span>
           </label>
           <Input
             type="text"
@@ -382,42 +394,50 @@ export const Ccomp = () => {
             name="price"
             value={data.price}
             onChange={handler}
-            className="outline-double w-4/5"
+            className="border-2 rounded-md px-3 py-2 w-full focus:outline-none focus:border-blue-500"
             placeholder="Enter course price"
           />
         </CardContent>
 
         <CardContent className={step === 1 ? "block" : "hidden"}>
-          <label htmlFor="level" className="block mb-1">
-            Course Level
+          <label
+            htmlFor="level"
+            className="text-gray-800 font-mono font-bold text-lg mb-1"
+          >
+            Course Level<span className="text-red-600">*</span>
           </label>
           <Select
             onValueChange={(value) =>
               setData((prev) => ({ ...prev, level: value }))
             }
+            className="w-[180px] border-2 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
           >
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger>
               <SelectValue placeholder="Choose a level" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="immediate">immediate</SelectItem>
-              <SelectItem value="beginner">beginner</SelectItem>
-              <SelectItem value="advance">advance</SelectItem>
-              <SelectItem value="all">all</SelectItem>
+              <SelectItem value="immediate">Immediate</SelectItem>
+              <SelectItem value="beginner">Beginner</SelectItem>
+              <SelectItem value="advance">Advance</SelectItem>
+              <SelectItem value="all">All</SelectItem>
             </SelectContent>
           </Select>
         </CardContent>
 
         <CardContent className={step === 1 ? "block" : "hidden"}>
-          <label htmlFor="language" className="block mb-1">
-            Course Language
+          <label
+            htmlFor="language"
+            className="text-gray-800 font-mono font-bold text-lg mb-1"
+          >
+            Course Language<span className="text-red-600">*</span>
           </label>
           <Select
             onValueChange={(value) =>
               setData((prev) => ({ ...prev, language: value }))
             }
+            className="w-[180px] border-2 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
           >
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger>
               <SelectValue placeholder="Choose a language" />
             </SelectTrigger>
             <SelectContent>
@@ -428,8 +448,11 @@ export const Ccomp = () => {
         </CardContent>
 
         <CardContent className={step === 1 ? "block" : "hidden"}>
-          <label htmlFor="tag" className="block mb-1">
-            Tags
+          <label
+            htmlFor="tag"
+            className="text-gray-800 font-mono font-bold text-lg mb-1"
+          >
+            Tags<span className="text-red-600">*</span>
           </label>
           <Input
             type="text"
@@ -437,24 +460,29 @@ export const Ccomp = () => {
             name="tag"
             value={data.tag}
             onChange={handler}
-            className="outline-double w-4/5"
+            className="border-2 rounded-md px-3 py-2 w-full focus:outline-none focus:border-blue-500"
             placeholder="Enter category"
           />
         </CardContent>
 
-        <CardContent className={step === 1 ? "block " : "hidden"}>
-          <label className="block mb-1">Course Thumbnail</label>
+        <CardContent className={step === 1 ? "block" : "hidden"}>
+          <label className="text-gray-800 font-mono font-bold text-lg mb-1">
+            Course Thumbnail<span className="text-red-600">*</span>
+          </label>
           <CustomFileUploader
             name="file"
             types={fileTypes}
-            className="outline-double w-4/5"
+            className="border-2 rounded-md px-3 py-2 w-full focus:outline-none focus:border-blue-500"
             handleChange={handleFileChange}
           />
         </CardContent>
 
         <CardContent className={step === 1 ? "block" : "hidden"}>
-          <label htmlFor="benefits" className="block mb-1">
-            Course Benefits
+          <label
+            htmlFor="benefits"
+            className="text-gray-800 font-mono font-bold text-lg mb-1"
+          >
+            Course Benefits<span className="text-red-600">*</span>
           </label>
           <textarea
             rows="4"
@@ -462,7 +490,7 @@ export const Ccomp = () => {
             name="benefits"
             value={data.benefits}
             onChange={handler}
-            className="outline-double w-4/5"
+            className="border-2 rounded-md px-3 py-2 w-full focus:outline-none focus:border-blue-500"
             placeholder="Enter course benefits"
           />
         </CardContent>
@@ -479,13 +507,18 @@ export const Ccomp = () => {
         </CardContent>
 
         <CardContent className={step === 2 ? "block" : "hidden"}>
-          Course Builder
+          <div className="text-gray-800 font-mono font-bold text-lg mb-4">
+            Course Builder
+          </div>
         </CardContent>
 
         <CardContent className={step === 2 ? "block" : "hidden"}>
           <div className="border-gray-950 border-2 p-4">
-            <label htmlFor="section" className="block mb-1">
-              Section Name
+            <label
+              htmlFor="section"
+              className="text-gray-800 font-mono font-bold text-lg mb-1"
+            >
+              Section Name<span className="text-red-600">*</span>
             </label>
             <Input
               type="text"
@@ -493,93 +526,132 @@ export const Ccomp = () => {
               name="section"
               value={data.section}
               onChange={handler}
-              className="outline-double w-4/5"
+              className="border-2 rounded-md px-3 py-2 w-full focus:outline-none focus:border-blue-500"
               placeholder="Enter section name"
             />
-            <Button onClick={handleCreateSection}>
-              {editingSection !== null ? "Update Section" : "Add Section"}
-            </Button>
           </div>
+          <div className="mt-6"></div>
+          <Button onClick={handleCreateSection}>Create Section</Button>
         </CardContent>
 
         {sections.map((section, index) => (
-          <CardContent
-            key={index}
-            className={step === 2 ? "flex flex-row" : "hidden"}
-          >
-            <Collapsible>
-              <CollapsibleTrigger>
+          <CardContent key={index}>
+            <Collapsible className="relative mb-4 border-b border-gray-300">
+              <CollapsibleTrigger className="flex flex-col md:flex-row justify-between items-start md:items-center w-full px-6 py-4 relative bg-gray-100 hover:bg-gray-200">
                 <div
-                  className="flex flex-row cursor-pointer"
+                  className="flex items-center gap-3 w-full"
                   onClick={() => setActiveSection(index)}
                 >
-                  <div>{section}</div>
+                  <FaList className="text-gray-600" />
+                  <span className="text-gray-800 font-mono text-lg">
+                    {section}
+                  </span>
                 </div>
               </CollapsibleTrigger>
-              <CollapsibleContent>
+
+              <div className="absolute top-4 right-3 flex gap-2 mt-2 md:mt-0">
+                <button
+                  onClick={() => handleEditSection(index)}
+                  className="text-gray-600 hover:text-gray-800 focus:outline-none"
+                >
+                  <AiOutlineEdit size={20} />
+                </button>
+                <button
+                  onClick={() => handleDeleteSection(index)}
+                  className="text-gray-600 hover:text-gray-800 focus:outline-none"
+                >
+                  <MdDeleteOutline size={20} />
+                </button>
+              </div>
+
+              <CollapsibleContent className="ml-10 mt-3">
                 {(lectures[index] || []).map((lecture, lectureIndex) => (
-                  <div key={lectureIndex} className="flex flex-row">
-                    <div>{lecture.Ltitle}</div>
-                    <Button
-                      onClick={() => handleEditLecture(index, lectureIndex)}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      onClick={() => handleDeleteLecture(index, lectureIndex)}
-                    >
-                      Delete
-                    </Button>
+                  <div
+                    key={lectureIndex}
+                    className="relative mt-4 border-b border-gray-300 pb-4"
+                  >
+                    <div className="text-gray-800 font-mono font-semibold">
+                      {lecture.Ltitle}
+                    </div>
+
+                    <div className="flex gap-2 mt-2">
+                      <button
+                        onClick={() => handleEditLecture(index, lectureIndex)}
+                        className="text-gray-600 hover:text-gray-800"
+                      >
+                        <AiOutlineEdit size={20} />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteLecture(index, lectureIndex)}
+                        className="text-gray-600 hover:text-gray-800"
+                      >
+                        <MdDeleteOutline size={20} />
+                      </button>
+                    </div>
                   </div>
                 ))}
+
                 <Dialog>
-                  <DialogTrigger>Add Lecture</DialogTrigger>
+                  <DialogTrigger className="text-gray-800 font-mono font-bold text-lg mt-4">
+                    Add Lecture
+                  </DialogTrigger>
                   <DialogContent>
-                    <DialogHeader>Adding Lecture</DialogHeader>
-                    <div className="mb-2">
-                      <label htmlFor="Ltitle" className="block mb-1">
+                    <DialogHeader className="text-gray-800 font-mono font-bold text-lg mb-4">
+                      Adding Lecture
+                    </DialogHeader>
+                    <div className="mb-4">
+                      <label
+                        htmlFor="Ltitle"
+                        className="block text-gray-800 font-mono font-bold text-lg mb-1"
+                      >
                         Lecture Title
                       </label>
                       <Input
                         type="text"
                         id="Ltitle"
                         name="Ltitle"
-                        className="w-4/5"
                         value={data.Ltitle}
                         onChange={handler}
+                        className="border-2 rounded-md px-3 py-2 w-full focus:outline-none focus:border-blue-500"
                       />
                     </div>
-                    <div className="mb-2">
-                      <label htmlFor="Ldescription" className="block mb-1">
+                    <div className="mb-4">
+                      <label
+                        htmlFor="Ldescription"
+                        className="block text-gray-800 font-mono font-bold text-lg mb-1"
+                      >
                         Lecture Description
                       </label>
                       <textarea
                         id="Ldescription"
                         rows="4"
                         name="Ldescription"
-                        className="outline-double w-4/5"
                         value={data.Ldescription}
                         onChange={handler}
+                        className="border-2 rounded-md px-3 py-2 w-full focus:outline-none focus:border-blue-500"
                       />
                     </div>
-                    <div className="mb-2">
-                      <label className="block mb-1">Lecture Video</label>
+                    <div className="mb-4">
+                      <label className="block text-gray-800 font-mono font-bold text-lg mb-1">
+                        Lecture Video
+                      </label>
                       <CustomFileUploader
                         name="file"
                         types={fileTypes}
-                        className="outline-double w-4/5"
+                        className="border-2 rounded-md px-3 py-2 w-full focus:outline-none focus:border-blue-500"
                         handleChange={(file) => setVideo(file)}
                       />
                     </div>
-                    <DialogClose onClick={() => handleSaveLecture(index)}>
+                    <DialogClose
+                      onClick={() => handleSaveLecture(index)}
+                      className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                    >
                       Save
                     </DialogClose>
                   </DialogContent>
                 </Dialog>
               </CollapsibleContent>
             </Collapsible>
-            <Button onClick={() => handleEditSection(index)}>Edit</Button>
-            <Button onClick={() => handleDeleteSection(index)}>Delete</Button>
           </CardContent>
         ))}
 

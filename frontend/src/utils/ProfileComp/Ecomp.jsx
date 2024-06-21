@@ -5,6 +5,7 @@ import { Navbar } from "../Navbar";
 import { Separator } from "@radix-ui/react-separator";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { Pnav } from "./Pnav";
+import { AiOutlineEdit } from "react-icons/ai";
 import {
   Select,
   SelectContent,
@@ -37,6 +38,8 @@ import { EditLectureDialog } from "./EditLectureDialog";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../Scroll.css";
+import { MdDeleteOutline } from "react-icons/md";
+import { FaList } from "react-icons/fa";
 
 export const Ecomp = () => {
   const select = useSelector((state) => state?.form?.FormData);
@@ -394,19 +397,22 @@ export const Ecomp = () => {
   };
 
   return (
-    <div className="h-screen w-screen overflow-hidden">
+    <div className="h-screen w-screen overflow-hidden bg-gradient-to-b from-gray-900">
       <Navbar />
-
-      <Separator className=" bg-slate-700" />
+      <Separator className="bg-slate-700" />
       <div className="flex flex-row h-screen">
         <Pnav />
-        <div className="w-[100%] bg-slate-900 mx-auto">
+        <div className="w-[100%] bg-gradient-to-b from-gray-900 to-black mx-auto">
           <ScrollArea className="h-[75%] w-[70%] m-auto mt-10 mb-10 overflow-scroll overflow-x-hidden scrollbar-hide">
-            <div>Edit Course</div>
-
+            <div className="font-bold text-4xl text-white mb-6">
+              Edit Course
+            </div>
             <Card>
               <CardContent style={{ display: step === 1 ? "block" : "none" }}>
-                <label htmlFor="title" className="block mb-1">
+                <label
+                  htmlFor="title"
+                  className="block text-gray-800 font-mono font-bold text-lg mb-1 mt-4"
+                >
                   Course Title
                 </label>
                 <Input
@@ -416,29 +422,33 @@ export const Ecomp = () => {
                   name="title"
                   value={data.title}
                   onChange={handler}
-                  className="outline-double w-4/5"
+                  className="border-2 rounded-md px-3 py-2 w-4/5 focus:outline-none focus:border-blue-500"
                 />
               </CardContent>
 
               <CardContent style={{ display: step === 1 ? "block" : "none" }}>
-                <label htmlFor="description" className="block mb-1">
+                <label
+                  htmlFor="description"
+                  className="block text-gray-800 font-mono font-bold text-lg mb-1"
+                >
                   Course Description
                 </label>
-                <div>
-                  <textarea
-                    rows="4"
-                    placeholder="Enter course description"
-                    id="description"
-                    name="description"
-                    value={data.description}
-                    onChange={handler}
-                    className="outline-double w-4/5"
-                  />
-                </div>
+                <textarea
+                  rows="4"
+                  placeholder="Enter course description"
+                  id="description"
+                  name="description"
+                  value={data.description}
+                  onChange={handler}
+                  className="border-2 rounded-md px-3 py-2 w-4/5 focus:outline-none focus:border-blue-500"
+                />
               </CardContent>
 
               <CardContent style={{ display: step === 1 ? "block" : "none" }}>
-                <label htmlFor="price" className="block mb-1">
+                <label
+                  htmlFor="price"
+                  className="block text-gray-800 font-mono font-bold text-lg mb-1"
+                >
                   Course Price
                 </label>
                 <Input
@@ -448,13 +458,16 @@ export const Ecomp = () => {
                   name="price"
                   value={data.price}
                   onChange={handler}
-                  className="outline-double w-4/5"
+                  className="border-2 rounded-md px-3 py-2 w-4/5 focus:outline-none focus:border-blue-500"
                 />
               </CardContent>
 
               <CardContent style={{ display: step === 1 ? "block" : "none" }}>
-                <label htmlFor="level" className="block mb-1">
-                  Course level
+                <label
+                  htmlFor="level"
+                  className="block text-gray-800 font-mono font-bold text-lg mb-1"
+                >
+                  Course Level
                 </label>
                 <Select
                   onValueChange={(value) =>
@@ -465,17 +478,20 @@ export const Ecomp = () => {
                     <SelectValue placeholder="Choose a level" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="immediate">immediate</SelectItem>
-                    <SelectItem value="beginner">beginner</SelectItem>
-                    <SelectItem value="advance">advance</SelectItem>
-                    <SelectItem value="all">all</SelectItem>
+                    <SelectItem value="immediate">Immediate</SelectItem>
+                    <SelectItem value="beginner">Beginner</SelectItem>
+                    <SelectItem value="advance">Advance</SelectItem>
+                    <SelectItem value="all">All</SelectItem>
                   </SelectContent>
                 </Select>
               </CardContent>
 
               <CardContent style={{ display: step === 1 ? "block" : "none" }}>
-                <label htmlFor="language" className="block mb-1">
-                  Course language
+                <label
+                  htmlFor="language"
+                  className="block text-gray-800 font-mono font-bold text-lg mb-1"
+                >
+                  Course Language
                 </label>
                 <Select
                   onValueChange={(value) =>
@@ -486,14 +502,17 @@ export const Ecomp = () => {
                     <SelectValue placeholder="Choose a language" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="hindi">hindi</SelectItem>
-                    <SelectItem value="english">english</SelectItem>
+                    <SelectItem value="hindi">Hindi</SelectItem>
+                    <SelectItem value="english">English</SelectItem>
                   </SelectContent>
                 </Select>
               </CardContent>
 
               <CardContent style={{ display: step === 1 ? "block" : "none" }}>
-                <label htmlFor="tag" className="block mb-1">
+                <label
+                  htmlFor="tag"
+                  className="block text-gray-800 font-mono font-bold text-lg mb-1"
+                >
                   Tags
                 </label>
                 <Input
@@ -502,37 +521,40 @@ export const Ecomp = () => {
                   name="tag"
                   value={data.tag}
                   onChange={handler}
-                  className="outline-double w-4/5"
+                  className="border-2 rounded-md px-3 py-2 w-4/5 focus:outline-none focus:border-blue-500"
                   placeholder="Enter category"
                 />
               </CardContent>
 
               <CardContent style={{ display: step === 1 ? "block" : "none" }}>
-                <label className="block mb-1">Course Thumbnail</label>
+                <label className="block text-gray-800 font-mono font-bold text-lg mb-1">
+                  Course Thumbnail
+                </label>
                 <CustomFileUploader
                   name="file"
                   types={fileTypes}
-                  className="outline-double w-4/5"
+                  className="border-2 rounded-md px-3 py-2 w-4/5 focus:outline-none focus:border-blue-500"
                   handleChange={handleFileChange}
                 />
               </CardContent>
 
               <CardContent style={{ display: step === 1 ? "block" : "none" }}>
-                <label htmlFor="benefits" className="block mb-1">
+                <label
+                  htmlFor="benefits"
+                  className="block text-gray-800 font-mono font-bold text-lg mb-1"
+                >
                   Course Benefits
                 </label>
-                <div>
-                  <textarea
-                    rows="4"
-                    cols="67"
-                    placeholder="Enter course benefits"
-                    id="benefits"
-                    name="benefits"
-                    value={data.benefits}
-                    onChange={handler}
-                    className="outline-double w-4/5"
-                  />
-                </div>
+                <textarea
+                  rows="4"
+                  cols="67"
+                  placeholder="Enter course benefits"
+                  id="benefits"
+                  name="benefits"
+                  value={data.benefits}
+                  onChange={handler}
+                  className="border-2 rounded-md px-3 py-2 w-4/5 focus:outline-none focus:border-blue-500"
+                />
               </CardContent>
 
               <CardContent style={{ display: step === 1 ? "block" : "none" }}>
@@ -561,12 +583,21 @@ export const Ecomp = () => {
                 </div>
               </CardContent>
 
-              <CardContent style={{ display: step === 2 ? "block" : "none" }}>
+              <CardContent
+                style={{
+                  display: step === 2 ? "block " : "none",
+                }}
+                className="text-gray-800 font-mono font-bold text-lg mb-1 mt-4"
+              >
                 Course Builder
               </CardContent>
+
               <CardContent style={{ display: step === 2 ? "block" : "none" }}>
                 <div className="border-gray-950 border-2 p-4">
-                  <label htmlFor="section" className="block mb-1">
+                  <label
+                    htmlFor="section"
+                    className="block text-gray-800 font-mono font-bold text-lg mb-1"
+                  >
                     Section Name
                   </label>
                   <Input
@@ -576,7 +607,7 @@ export const Ecomp = () => {
                     name="section"
                     value={data.section}
                     onChange={handler}
-                    className="outline-double w-4/5"
+                    className="border-2 rounded-md px-3 py-2 w-4/5 focus:outline-none focus:border-blue-500 mb-4"
                   />
                   <Button onClick={handleCreateSection}>
                     {editingSection !== null ? "Update Section" : "Add Section"}
@@ -590,41 +621,78 @@ export const Ecomp = () => {
                   className="flex flex-row"
                   style={{ display: step === 2 ? "block" : "none" }}
                 >
-                  <Collapsible>
-                    <CollapsibleTrigger>
+                  <Collapsible className="relative mb-4 border-b border-gray-300">
+                    <CollapsibleTrigger className="flex flex-col md:flex-row justify-between items-start md:items-center w-full px-6 py-4 relative bg-gray-100 hover:bg-gray-200">
                       <div
-                        className="flex flex-row"
+                        className="flex items-center gap-3 w-full"
                         onClick={() => setActiveSection(index)}
                       >
-                        <div>{section}</div>
+                        <FaList className="text-gray-600" />
+                        <span className="text-gray-800 font-mono text-lg">
+                          {section}
+                        </span>
                       </div>
                     </CollapsibleTrigger>
-                    <CollapsibleContent>
+
+                    <div className="absolute top-4 right-3 flex gap-2 mt-2 md:mt-0">
+                      <button
+                        onClick={() => handleEditSection(index)}
+                        className="text-gray-600 hover:text-gray-800 focus:outline-none"
+                      >
+                        <AiOutlineEdit size={20} />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteSection(index)}
+                        className="text-gray-600 hover:text-gray-800 focus:outline-none"
+                      >
+                        <MdDeleteOutline size={20} />
+                      </button>
+                    </div>
+
+                    <CollapsibleContent className="ml-10 mt-3">
                       {(lectures[index] || []).map((lecture, lectureIndex) => (
-                        <div key={lectureIndex}>
-                          <div>{lecture.Ltitle}</div>
-                          <Button
-                            onClick={() =>
-                              handleEditLecture(index, lectureIndex)
-                            }
-                          >
-                            Edit
-                          </Button>
-                          <Button
-                            onClick={() =>
-                              handleDeleteLecture(index, lectureIndex)
-                            }
-                          >
-                            Delete
-                          </Button>
+                        <div
+                          key={lectureIndex}
+                          className="relative mt-4 border-b border-gray-300 pb-4"
+                        >
+                          <div className="text-gray-800 font-mono font-semibold">
+                            {lecture.Ltitle}
+                          </div>
+
+                          <div className="flex gap-2 mt-2">
+                            <button
+                              onClick={() =>
+                                handleEditLecture(index, lectureIndex)
+                              }
+                              className="text-gray-600 hover:text-gray-800"
+                            >
+                              <AiOutlineEdit size={20} />
+                            </button>
+                            <button
+                              onClick={() =>
+                                handleDeleteLecture(index, lectureIndex)
+                              }
+                              className="text-gray-600 hover:text-gray-800"
+                            >
+                              <MdDeleteOutline size={20} />
+                            </button>
+                          </div>
                         </div>
                       ))}
+
                       <Dialog>
-                        <DialogTrigger>Add Lecture</DialogTrigger>
+                        <DialogTrigger className="text-gray-800 font-mono font-bold text-lg mt-4">
+                          Add Lecture
+                        </DialogTrigger>
                         <DialogContent>
-                          <DialogHeader>Adding Lecture</DialogHeader>
-                          <div>
-                            <label htmlFor="Ltitle" className="block mb-1">
+                          <DialogHeader className="text-gray-800 font-mono font-bold text-lg mb-4">
+                            Adding Lecture
+                          </DialogHeader>
+                          <div className="mb-4">
+                            <label
+                              htmlFor="Ltitle"
+                              className="block text-gray-800 font-mono font-bold text-lg mb-1"
+                            >
                               Lecture Title
                             </label>
                             <Input
@@ -633,13 +701,13 @@ export const Ecomp = () => {
                               name="Ltitle"
                               value={data.Ltitle}
                               onChange={handler}
-                              className="outline-double w-4/5"
+                              className="border-2 rounded-md px-3 py-2 w-full focus:outline-none focus:border-blue-500"
                             />
                           </div>
-                          <div>
+                          <div className="mb-4">
                             <label
                               htmlFor="Ldescription"
-                              className="block mb-1"
+                              className="block text-gray-800 font-mono font-bold text-lg mb-1"
                             >
                               Lecture Description
                             </label>
@@ -649,29 +717,30 @@ export const Ecomp = () => {
                               name="Ldescription"
                               value={data.Ldescription}
                               onChange={handler}
-                              className="outline-double w-4/5"
+                              className="border-2 rounded-md px-3 py-2 w-full focus:outline-none focus:border-blue-500"
                             />
                           </div>
-                          <div>
-                            <label className="block mb-1">Lecture Video</label>
+                          <div className="mb-4">
+                            <label className="block text-gray-800 font-mono font-bold text-lg mb-1">
+                              Lecture Video
+                            </label>
                             <CustomFileUploader
                               name="file"
                               types={fileTypes}
-                              className="outline-double w-4/5"
+                              className="border-2 rounded-md px-3 py-2 w-full focus:outline-none focus:border-blue-500"
                               handleChange={(file) => setVideo(file)}
                             />
                           </div>
-                          <DialogClose onClick={() => handleSaveLecture(index)}>
+                          <DialogClose
+                            onClick={() => handleSaveLecture(index)}
+                            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                          >
                             Save
                           </DialogClose>
                         </DialogContent>
                       </Dialog>
                     </CollapsibleContent>
                   </Collapsible>
-                  <Button onClick={() => handleEditSection(index)}>Edit</Button>
-                  <Button onClick={() => handleDeleteSection(index)}>
-                    Delete
-                  </Button>
                 </CardContent>
               ))}
 

@@ -187,12 +187,6 @@ export const Cart = () => {
     return stars;
   };
 
-  const handleCardClick = (item) => {
-    // Navigate to course details if needed
-    // dispatch(update({ ...select, c_id: item._id }));
-    // navigate("/CourseDetails");
-  };
-
   return (
     <div className="h-screen w-screen overflow-hidden bg-gradient-to-b from-gray-900 to-black">
       <Navbar />

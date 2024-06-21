@@ -48,10 +48,10 @@ app.get("/", (req, res) => {
 });
 
 // Database Connection
-db();
+// db();
 
 // Server Listener
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
 });

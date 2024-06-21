@@ -19,7 +19,6 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const { contactUs } = require("./controllers/contactUs");
 
-app.use(express.json());
 app.use(cookieParser());
 
 app.get("/", (req, res) => {

@@ -14,7 +14,7 @@ const { contactUs } = require("./controllers/contactUs");
 
 // Middleware
 app.use(express.json());
-app.use(cookieParser());
+// app.use(cookieParser());
 
 // CORS Configuration
 // const corsConfig = {

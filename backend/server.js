@@ -16,7 +16,7 @@ app.listen(3000, () => {
 
 // const db = require("./database");
 const cookieParser = require("cookie-parser");
-// const cors = require("cors");
+const cors = require("cors");
 // const { contactUs } = require("./controllers/contactUs");
 
 app.use(cookieParser());
@@ -25,14 +25,14 @@ app.get("/", (req, res) => {
   res.json("done");
 });
 
-// const corsConfig = {
-//   origin: "*",
-//   credential: true,
-//   methods: ["GET", "POST", "PUT", "DELETE"],
-// };
-// app.options("", cors(corsConfig));
+const corsConfig = {
+  origin: "*",
+  credential: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+};
+app.options("", cors(corsConfig));
 
-// app.use(cors(corsConfig));
+app.use(cors(corsConfig));
 
 // app.use(
 //   fileUpload({

@@ -14,7 +14,7 @@ app.listen(3000, () => {
   console.log("hello server is started haha");
 });
 
-// const db = require("./database");
+const db = require("./database");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 // const { contactUs } = require("./controllers/contactUs");
@@ -49,4 +49,4 @@ cloudinaryConnect();
 // app.use("/api/v1/contact", contactUs);
 // app.use("/api/v1/cart", cartRoutes);
 
-// db();
+db();

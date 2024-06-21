@@ -15,11 +15,11 @@ app.listen(3000, () => {
 });
 
 // const db = require("./database");
-// const cookieParser = require("cookie-parser");
+const cookieParser = require("cookie-parser");
 // const cors = require("cors");
 // const { contactUs } = require("./controllers/contactUs");
 
-// app.use(cookieParser());
+app.use(cookieParser());
 
 app.get("/", (req, res) => {
   res.json("done");

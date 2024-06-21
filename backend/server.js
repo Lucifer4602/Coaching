@@ -6,7 +6,7 @@ const app = express();
 // const tagsRoutes = require("./routes/tag");
 // const cartRoutes = require("./routes/cart");
 // const fileUpload = require("express-fileupload");
-// const { cloudinaryConnect } = require("./cloudinary");
+const { cloudinaryConnect } = require("./cloudinary");
 
 app.use(express.json());
 
@@ -34,13 +34,13 @@ app.options("", cors(corsConfig));
 
 app.use(cors(corsConfig));
 
-// app.use(
-//   fileUpload({
-//     useTempFiles: true,
-//     tempFileDir: "/tmp",
-//   })
-// );
-// cloudinaryConnect();
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/tmp",
+  })
+);
+cloudinaryConnect();
 
 // app.use("/api/v1/auth", userRoutes);
 // app.use("/api/v1/profile", profileRoutes);

@@ -80,7 +80,7 @@ Contributions are what make the open-source community such an amazing place to l
 Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
-- Project Link: [GitHub](https://github.com/your-username/technoflix)
-- Website: [Technoflix](https://technoflix.com)
+- Project Link: [GitHub](https://github.com/Lucifer4602/Coaching)
+- Website: [Technoflix](technoflix.netlify.app/)
 
 

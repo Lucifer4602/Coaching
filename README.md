@@ -81,6 +81,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
 - Project Link: [GitHub](https://github.com/Lucifer4602/Coaching)
-- Website: [Technoflix](technoflix.netlify.app)
+- Website: [Technoflix](https://technoflix.netlify.app/)
 
 
